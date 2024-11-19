@@ -18,8 +18,8 @@ def CrearProyecto(request):
 
 def ListarProyectos(request):
     proyectos = Proyecto.objects.all()
-    data = {"proyectos": proyectos}
-    return render(request, "dashboard/listar_proyectos.html", data)
+    data = {"lista": proyectos}
+    return render(request, "dashboard/proyectos.html", data)
 
 
 def EditarProyecto(request, id):

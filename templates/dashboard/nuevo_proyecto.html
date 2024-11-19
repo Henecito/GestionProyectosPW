@@ -1,8 +1,24 @@
 {% extends 'dashboard/base.html' %}
 
-{% block title %}Nuevo Proyecto{% endblock %}
+<!-- {% block title %}Nuevo Proyecto{% endblock %} -->
 
 {% block content %}
-  <h1>Agregar Nuevo Proyecto</h1>
-  <p>Formulario para agregar un nuevo proyecto.</p>
+
+{% if messages %}
+{% for msj in messages %}
+<script>
+  Swal.fire('{{msj}}', '', 'success')
+</script>
+{% endfor %}
+{% endif %}
+
+<form method="post">
+  <!-- token que impide enviar datos de otro lugar que no sea el formulario -->
+  {% csrf_token %}
+  {{ form }}
+  <div class="text-center mt-3">
+    <input type="reset" class="btn btn-outline-info w-25" value="Limpiar">
+    <input type="submit" class="btn btn-primary w-25" value="Guardar">
+  </div>
+</form>
 {% endblock %}

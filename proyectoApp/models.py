@@ -12,8 +12,8 @@ class Proyecto(models.Model):
     lider = models.CharField(max_length=100)
     presupuesto = models.FloatField()
     observaciones = models.TextField()
-    fecha_creacion = models.DateField(auto_now_add=True)
-    fecha_modificacion = models.DateField(auto_now=True)
+    fecha_creacion = models.DateField()
+    fecha_modificacion = models.DateField()
 
     def __str__(self):
         return self.nombre

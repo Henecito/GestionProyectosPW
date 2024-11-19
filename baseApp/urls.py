@@ -1,5 +1,5 @@
-from django.urls import path
-from . import views
+from django.urls import include, path
+from baseApp import views
 
 urlpatterns = [
     # Ruta para la página de login
@@ -8,6 +8,6 @@ urlpatterns = [
     # Rutas para las vistas del dashboard (protegidas por login_required)
     path('', views.dashboard_view, name='dashboard'),  # Página principal del Dashboard
     path('resumen/', views.resumen_view, name='resumen'),  # Página de resumen
-    path('nuevo_proyecto/', views.nuevo_proyecto_view, name='nuevo_proyecto'),  # Agregar un nuevo proyecto
+    path('proyecto/', include('proyectoApp.urls')),  # Agregar un nuevo proyecto
     path('proyectos/', views.proyectos_view, name='proyectos'),  # Lista de proyectos
 ]

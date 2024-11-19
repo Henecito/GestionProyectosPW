@@ -20,7 +20,7 @@ from django.urls import path, include
 from proyectoApp import views
 
 urlpatterns = [
-    path("crear_proyecto/", views.CrearProyecto, name="crear_proyecto"),
+    path("nuevo/", views.CrearProyecto, name="nuevo_proyecto"),
     path("listar_proyectos/", views.ListarProyectos, name="listar_proyectos"),
     path("editar_proyecto/<int:codigo>/", views.EditarProyecto, name="editar_proyecto"),
     path("eliminar_proyecto/<int:codigo>/", views.EliminarProyecto, name="eliminar_proyecto"),

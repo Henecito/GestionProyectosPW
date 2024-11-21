@@ -21,13 +21,12 @@
         }
         #sidebar {
             background-color: #FF6219;
-            width: 250px;
+            width: 270px;
             height: 100%;
             position: fixed;
             top: 0;
             left: 0;
             padding-top: 30px;
-            color: white;
             transition: all 0.3s;
         }
         .sidebar-heading {
@@ -72,7 +71,7 @@
         #page-content-wrapper {
             margin-left: 250px;
             padding: 20px;
-            background-color: #f8f9fa;
+            background-color: white;
             width: 100%;
             transition: margin-left 0.3s;
         }
@@ -181,6 +180,9 @@
                     <a href="/admin/" class="list-group-item">
                         <i class="fas fa-cogs"></i> Admin
                     </a>
+                    <a href="{% url 'nuevo_usuario' %}" class="list-group-item">
+                        <i class="fas fa-plus-circle"></i> Crear nuevo usuario
+                    </a>
                 {% endif %}
             {% else %}
                 <a href="/login/" class="list-group-item">
@@ -212,7 +214,7 @@
 
     <div id="page-content-wrapper">
                 <!-- Sección de Notificaciones (lo que agregamos de nuevo) -->
-                <div class="d-flex justify-content-end mt-3">
+                <div class="d-flex justify-content-end">
                     <div class="dropdown">
                         <button class="btn navbar-notification dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-bell"></i> <span class="badge bg-danger">3</span>
@@ -225,10 +227,12 @@
                         </ul>
                     </div>
                 </div>
-        <!-- Este es el lugar donde se renderizará el contenido de cada vista -->
+        
+        <div class="mx-5">        <!-- Este es el lugar donde se renderizará el contenido de cada vista -->
         {% block content %}
         <!-- El contenido de la página (debe ser definido en las plantillas que extiendan este archivo) -->
         {% endblock %}
+        </div> 
     </div>
 </div>
 

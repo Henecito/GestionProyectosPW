@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'baseApp',
     'proyectoApp',
+    'usuarioApp',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +152,4 @@ LOGIN_REDIRECT_URL = 'dashboard'
 
 # Redirigir a la página de login si el usuario no está autenticado
 LOGIN_URL = 'login'
+

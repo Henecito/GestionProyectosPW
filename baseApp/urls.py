@@ -10,4 +10,5 @@ urlpatterns = [
     path('resumen/', views.resumen_view, name='resumen'),  # Página de resumen
     path('proyecto/', include('proyectoApp.urls')),  # Agregar un nuevo proyecto
     path('proyectos/', views.proyectos_view, name='proyectos'),  # Lista de proyectos
+    path('usuario/', include('usuarioApp.urls')),
 ]

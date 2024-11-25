@@ -16,6 +16,7 @@
   
   <h2 class="text-center text-black mb-4">Nuevo Usuario</h2>
 
+  <!-- Nombre de Usuario -->
   <div class="row mb-3">
     <div class="col-md-6">
       <label for="id_username" class="form-label text-dark">Nombre de Usuario</label>
@@ -28,6 +29,10 @@
         </div>
       {% endif %}
     </div>
+  </div>
+
+  <!-- Contraseña -->
+  <div class="row mb-3">
     <div class="col-md-6">
       <label for="id_password1" class="form-label text-dark">Contraseña</label>
       {{ form.password1 }}
@@ -39,9 +44,6 @@
         </div>
       {% endif %}
     </div>
-  </div>
-
-  <div class="row mb-3">
     <div class="col-md-6">
       <label for="id_password2" class="form-label text-dark">Confirmar Contraseña</label>
       {{ form.password2 }}
@@ -55,6 +57,22 @@
     </div>
   </div>
 
+  <!-- Selección de Grupo -->
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <label for="id_group" class="form-label text-dark">Tipo</label>
+      {{ form.group }}
+      {% if form.group.errors %}
+        <div class="text-danger">
+          {% for error in form.group.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Botones -->
   <div class="text-center mt-4">
     <button type="reset" class="btn btn-outline-warning w-25 mx-2">Limpiar</button>
     <button type="submit" class="btn btn-warning w-25 mx-2">Registrar</button>

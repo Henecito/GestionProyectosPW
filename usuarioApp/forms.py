@@ -1,13 +1,17 @@
 from django import forms
-from usuarioApp.models import Usuario
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
 
-class UsuarioForm(forms.ModelForm):
+class UserCreationFormWithGroup(UserCreationForm):
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=True, label="Grupo")
+
     class Meta:
-        model = Usuario
-        fields = '__all__'
+        model = User
+        fields = ('username', 'password1', 'password2', 'group')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if Usuario.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Este correo electrónico ya está registrado.")
         return email

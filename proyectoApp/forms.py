@@ -1,5 +1,22 @@
 from django import forms
-from proyectoApp.models import Proyecto
+from proyectoApp.models import Cliente, Proyecto
+
+
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = [
+            "rut",
+            "nombre",
+            "telefono",
+            "email",
+        ]
+        widgets = {
+            "rut": forms.TextInput(attrs={"class": "form-control"}),
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "telefono": forms.NumberInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+        }
 
 
 class ProyectoForm(forms.ModelForm):
@@ -14,9 +31,7 @@ class ProyectoForm(forms.ModelForm):
             "lider",
             "presupuesto",
             "observaciones",
-            "fecha_creacion",
-            "fecha_modificacion",
-        ]  # Todos los campos "__all__"
+        ]
         widgets = {
             "codigo": forms.TextInput(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
@@ -28,14 +43,8 @@ class ProyectoForm(forms.ModelForm):
                 attrs={"class": "form-control", "type": "date"}
             ),
             # "estado": forms.Select(attrs={"class": "form-select"}),
-            # "cliente": forms.Select(attrs={"class": "form-select"}),
-            "lider": forms.TextInput(attrs={"class": "form-control"}),
+            "cliente": forms.Select(attrs={"class": "form-select"}),
+            "lider": forms.Select(attrs={"class": "form-select"}),
             "presupuesto": forms.NumberInput(attrs={"class": "form-control"}),
             "observaciones": forms.TextInput(attrs={"class": "form-control"}),
-            "fecha_creacion": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
-            ),
-            "fecha_modificacion": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
-            ),
         }

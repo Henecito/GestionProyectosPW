@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Proyectos{% endblock %}
+
+{% block content %}
+<h3 class="alert alert-secondary text-center">Lista de Proyectos</h3>
+
+{% if lista %}
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead class="table-primary">
+      <tr>
+        <th class="col-1">Código</th>
+        <th class="col">Nombre</th>
+        <th class="col">Descripción</th>
+        <th class="col-1">Inicio</th>
+        <th class="col-1">Fin</th>
+        <th class="col-1">Lider</th>
+        <th class="col-1">Presupuesto</th>
+        <th class="col-1">Observaciones</th>
+        <th class="col-1">Creación</th>
+        <th class="col-1">Modificación</th>
+        <th class="col-1"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in lista %}
+      <tr>
+        <td>{{ item.codigo }}</td>
+        <td>{{ item.nombre }}</td>
+        <td>{{ item.descripcion }}</td>
+        <td>{{ item.fecha_inicio }}</td>
+        <td>{{ item.fecha_fin }}</td>
+        <td>{{ item.lider }}</td>
+        <td>{{ item.presupuesto }}</td>
+        <td>{{ item.observaciones }}</td>
+        <td>{{ item.fecha_creacion }}</td>
+        <td>{{ item.fecha_modificacion }}</td>
+        <td nowrap>
+          <a href="{% url 'editar_proyecto' item.codigo %}" class="btn btn-warning">Editar</a>
+          <!-- <a href="#" class="btn btn-warning">Editar</a> -->
+          <a href="#" class="btn btn-danger">Eliminar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+  const eliminar = (id) => {
+    Swal.fire({
+      title: '¿Está seguro de eliminar el proyecto?',
+      showDenyButton: true,
+      icon: 'error',
+      confirmButtonText: 'Eliminar',
+      denyButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '/producto/eliminarproducto/' + id
+      }
+    })
+  }
+</script>
+{% else %}
+<p class="alert alert-warning">No hay proyectos registrados</p>
+{% endif %}
+{% endblock %}

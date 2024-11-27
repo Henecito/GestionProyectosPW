@@ -17,6 +17,6 @@ def NuevoUsuario(request):
     else:
         form = UserCreationFormWithGroup()
 
-    return render(request, 'dashboard/nuevo_usuario.html', {'form': form})
+    return render(request, 'usuario/form_usuario.html', {'form': form})
 
 

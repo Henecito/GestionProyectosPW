@@ -92,7 +92,7 @@ DATABASES = {
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "mysql.connector.django",
-#         "NAME": "storedb",
+#         "NAME": "pwdb",
 #         "USER": "root",
 #         "PASSWORD": "",
 #         "OPTIONS": {

@@ -6,7 +6,7 @@ class Cliente(models.Model):
     nombre = models.CharField(max_length=100)
     telefono = models.PositiveIntegerField()
     email = models.EmailField()
-    fecha_creacion = models.DateField(auto_created=True)
+    fecha_creacion = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.nombre

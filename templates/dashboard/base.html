@@ -47,6 +47,15 @@
                         <li><a class="dropdown-item" href="/projects/ongoing/">Proyectos en curso</a></li>
                     </ul>
                 </div>
+                <div class="dropdown">
+                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-project-diagram"></i> Clientes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'listar_clientes' %}">Ver todos los clientes</a>
+                        </li>
+                    </ul>
+                </div>
                 {% endblock gerente %}
 
                 {% endif %}

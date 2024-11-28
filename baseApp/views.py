@@ -37,8 +37,8 @@ def login_view(request):
         else:
             # Si las credenciales son incorrectas, mostramos un mensaje de error
             error_message = "Usuario o contraseña incorrectos."
-            return render(request, "login/login.html", {"error_message": error_message})
+            return render(request, "registration/login.html", {"error_message": error_message})
 
     return render(
-        request, "login/login.html"
+        request, "registration/login.html"
     )  # Si el método no es POST, simplemente renderizamos el formulario

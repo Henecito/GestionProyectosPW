@@ -114,7 +114,6 @@ button:hover {
 @media (max-width: 768px) {
   #sidebar {
     width: 150px;
-    /* Sidebar becomes even narrower */
   }
 
   #sidebar .sidebar-heading {
@@ -164,3 +163,45 @@ button:hover {
     text-align: center;
   }
 }
+
+/* Bienvenido Usuarios Styles */
+
+#userDropdown {
+  background-color: #ff6219;
+  color: white;  
+  border: 1px solid white;
+}
+
+#userDropdown:hover,
+#userDropdown:focus {
+  background-color: white;
+  color: black;  
+  transition: background-color 0.2s ease, color 0.2s ease;  
+}
+
+.dropdown-menu {
+  background-color: #fff;
+  border: 1px solid black;
+}
+
+.dropdown-item {
+  color: black;  
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: black;  
+  background-color: #ff6219;  
+  transition: color 0.2s ease, background-color 0.2s ease;  
+}
+
+.dropdown-item.text-danger {
+  color: black !important;  
+}
+
+.dropdown-item.text-danger:hover,
+.dropdown-item.text-danger:focus {
+  background-color: #e74a1f;  
+  color: black !important;  
+}
+

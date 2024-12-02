@@ -17,7 +17,7 @@
     <div id="wrapper">
         <div id="sidebar">
             <div class="sidebar-heading">
-                <a href="{% url 'dashboard' %}" style="color: white; text-decoration: none;">
+                <a href="#" style="color: white; text-decoration: none;">
                     <i class="fas fa-cubes"></i> PW Ingeniería
                 </a>
             </div>
@@ -27,13 +27,13 @@
                 {% if not user.is_superuser %}
 
                 {% block gerente %}
-                <a href="{% url 'resumen' %}" class="list-group-item">
+                <a href="#" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>
-                <a href="{% url 'nuevo_proyecto' %}" class="list-group-item">
+                <a href="#" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Nuevo proyecto
                 </a>
-                <a href="{% url 'nuevo_cliente' %}" class="list-group-item">
+                <a href="#" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Nuevo cliente
                 </a>
                 <div class="dropdown">
@@ -41,10 +41,10 @@
                         <i class="fas fa-project-diagram"></i> Proyectos
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'listar_proyectos' %}">Ver todos los proyectos</a>
+                        <li><a class="dropdown-item" href="#">Ver todos los proyectos</a>
                         </li>
-                        <li><a class="dropdown-item" href="/projects/completed/">Proyectos completados</a></li>
-                        <li><a class="dropdown-item" href="/projects/ongoing/">Proyectos en curso</a></li>
+                        <li><a class="dropdown-item" href="#">Proyectos completados</a></li>
+                        <li><a class="dropdown-item" href="#">Proyectos en curso</a></li>
                     </ul>
                 </div>
                 <div class="dropdown">
@@ -52,7 +52,7 @@
                         <i class="fas fa-project-diagram"></i> Clientes
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'listar_clientes' %}">Ver todos los clientes</a>
+                        <li><a class="dropdown-item" href="#">Ver todos los clientes</a>
                         </li>
                     </ul>
                 </div>
@@ -76,7 +76,7 @@
                 <a href="#" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Lista de usuarios
                 </a>
-                <a href="{% url 'nuevo_usuario' %}" class="list-group-item">
+                <a href="#" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Crear nuevo usuario
                 </a>
                 {% endblock admin %}
@@ -84,7 +84,7 @@
                 {% endif %}
 
                 {% else %}
-                <a href="/login/" class="list-group-item">
+                <a href="/accounts/login/" class="list-group-item">
                     <i class="fas fa-sign-in-alt"></i> Iniciar sesión
                 </a>
                 <a href="/signup/" class="list-group-item">

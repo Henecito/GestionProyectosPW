@@ -7,6 +7,6 @@ urlpatterns = [
     # Rutas para las vistas del dashboard (protegidas por login_required)
     path('', views.dashboard_view, name='dashboard'),  # Página principal del Dashboard
     path('resumen/', views.resumen_view, name='resumen'),  # Página de resumen
-    path('proyecto/', include('proyectoApp.urls')),  # Agregar un nuevo proyecto
-    path('usuario/', include('usuarioApp.urls')),
+    # path('proyecto/', include('proyectoApp.urls')),
+    # path('persona/', include('personaApp.urls')),
 ]

@@ -5,18 +5,16 @@ from django.urls import reverse
 
 
 # Vista para el dashboard principal
-@login_required
 def dashboard_view(request):
     return render(request, "dashboard/dashboard.html")
 
 
 # Vista para el resumen del dashboard
-@login_required
 def resumen_view(request):
     return render(request, "dashboard/resumen.html")
 
 
-# Vista para el login (procesa las credenciales)
+# # Vista para el login (procesa las credenciales)
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(

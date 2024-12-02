@@ -12,6 +12,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     
     # Ruta para el dashboard
-    path('', include('baseApp.urls')),  # Ruta para el dashboard
+    path('', include('baseApp.urls')),
 ]
 

@@ -37,8 +37,7 @@
         <td>{{ item.fecha_creacion }}</td>
         <td>{{ item.fecha_modificacion }}</td>
         <td nowrap>
-          <a href="{% url 'editar_proyecto' item.codigo %}" class="btn btn-warning">Editar</a>
-          <!-- <a href="#" class="btn btn-warning">Editar</a> -->
+          <a href="#" class="btn btn-warning">Editar</a>
           <a href="#" class="btn btn-danger">Eliminar</a>
         </td>
       </tr>
@@ -49,7 +48,7 @@
 <script>
   const eliminar = (id) => {
     Swal.fire({
-      title: '¿Está seguro de eliminar el proyecto?',
+      title: '¿Está seguro de eliminar el cargo?',
       showDenyButton: true,
       icon: 'error',
       confirmButtonText: 'Eliminar',

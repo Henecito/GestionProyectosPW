@@ -2,16 +2,16 @@
 
 {% block content %}
 {% if messages %}
-{% for msj in messages %}
-<script>
-  Swal.fire('{{ msj }}', '', 'success')
-</script>
-{% endfor %}
+  {% for msj in messages %}
+    <script>
+      Swal.fire('{{ msj }}', '', 'success')
+    </script>
+  {% endfor %}
 {% endif %}
 
 <form method="post" class="container my-3 p-4 bg-light shadow-lg rounded border border-warning">
   {% csrf_token %}
-
+  
   <h2 class="text-center text-black mb-4">Nuevo Proyecto</h2>
 
   <div class="row mb-3">

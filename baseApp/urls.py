@@ -5,8 +5,12 @@ urlpatterns = [
     # Ruta para la página de login
     # path('login/', views.login_view, name='login'),  # Vista de login
     # Rutas para las vistas del dashboard (protegidas por login_required)
-    path('', views.dashboard_view, name='dashboard'),  # Página principal del Dashboard
-    path('resumen/', views.resumen_view, name='resumen'),  # Página de resumen
-    # path('proyecto/', include('proyectoApp.urls')),
-    # path('persona/', include('personaApp.urls')),
+    path("", views.inicio, name="inicio"),  # Página principal del Dashboard
+    path('proyecto/', include('proyectoApp.urls')),
+    path('usuario/', include('usuarioApp.urls')),
+    # ----- Estado -----
+    path("crearestado/", views.crearEstado, name="crearestado"),
+    path("estados/", views.listarEstado, name="estados"),
+    path("editarestado/<int:id>", views.actualizarEstado, name="editarestado"),
+    path("eliminarestado/<int:id>", views.eliminarEstado, name="eliminarestado"),
 ]

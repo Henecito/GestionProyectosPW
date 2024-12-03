@@ -1,0 +1,82 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+{% if messages %}
+  <div class="container my-3">
+    {% for msj in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ msj }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" class="container my-3 p-4 bg-light shadow-lg rounded border border-warning">
+  {% csrf_token %}
+  
+  <h2 class="text-center text-black mb-4">Nuevo Usuario</h2>
+
+  <!-- Nombre de Usuario -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="id_username" class="form-label text-dark">Nombre de Usuario</label>
+      {{ form.username }}
+      {% if form.username.errors %}
+        <div class="text-danger">
+          {% for error in form.username.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Contraseña -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="id_password1" class="form-label text-dark">Contraseña</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}
+        <div class="text-danger">
+          {% for error in form.password1.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <label for="id_password2" class="form-label text-dark">Confirmar Contraseña</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}
+        <div class="text-danger">
+          {% for error in form.password2.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Selección de Grupo -->
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <label for="id_group" class="form-label text-dark">Tipo</label>
+      {{ form.group }}
+      {% if form.group.errors %}
+        <div class="text-danger">
+          {% for error in form.group.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Botones -->
+  <div class="text-center mt-4">
+    <button type="reset" class="btn btn-outline-warning w-25 mx-2">Limpiar</button>
+    <button type="submit" class="btn btn-warning w-25 mx-2">Registrar</button>
+  </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+.user-hover-container {
+    position: relative;
+}
+
+.user-hover-actions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.usuario-row:hover .user-hover-actions {
+    display: block;
+}
+
+.usuario-detalle-btn {
+    white-space: nowrap;
+}

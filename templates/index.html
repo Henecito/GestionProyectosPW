@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.6.0/dist/css/sb-admin-2.min.css"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-heading">
+                <a href="#" style="color: white; text-decoration: none;">
+                    <i class="fas fa-cubes"></i> PW Ingeniería
+                </a>
+            </div>
+            <div class="list-group">
+                {% if user.is_authenticated %}
+                <!-- Empleado -->
+                <!-- Gerente de recursos -->
+                <!-- Gerente -->
+
+                {% if not user.is_superuser %}
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-tachometer-alt"></i> Resumen
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Nuevo proyecto
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Nuevo cliente
+                </a>
+                <div class="dropdown">
+                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-project-diagram"></i> Proyectos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Ver todos los proyectos</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Proyectos completados</a></li>
+                        <li><a class="dropdown-item" href="#">Proyectos en curso</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-project-diagram"></i> Clientes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Ver todos los clientes</a>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                    
+                <!-- Admin -->
+                {% if user.is_superuser %}
+                <a href="/admin/" class="list-group-item">
+                    <i class="fas fa-cogs"></i> Admin
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Empleados
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Usuarios
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Grupos
+                </a>
+                {% endif %}
+
+                {% else %}
+                <a href="{% url 'login' %}" class="list-group-item">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+                </a>
+                <a href="/signup/" class="list-group-item">
+                    <i class="fas fa-user-plus"></i> Registrarse
+                </a>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="dropdown position-fixed bottom-0 start-0 m-3">
+                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> Bienvenid@ {{ user.username }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li>
+                        <a class="dropdown-item" href="">
+                            <i class="fas fa-user"></i> Mi perfil
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="">
+                            <i class="fas fa-cogs"></i> Configuración
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item text-danger">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>            
+            {% endif %}
+        </nav>
+
+        <!-- Mobile Toggle Button -->
+        <button class="toggle-btn" id="sidebarToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div id="page-content-wrapper">
+            <!-- Sección de Notificaciones (lo que agregamos de nuevo) -->
+            <!-- <div class="d-flex justify-content-end">
+                <div class="dropdown">
+                    <button class="btn navbar-notification dropdown-toggle" type="button" id="notificationsDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i> <span class="badge bg-danger">3</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                        <li><a class="dropdown-item" href="#">Nueva tarea asignada</a></li>
+                        <li><a class="dropdown-item" href="#">Proyecto completado</a></li>
+                        <li><a class="dropdown-item" href="#">Nuevo mensaje</a></li>
+                        <li><a class="dropdown-item text-center" href="#">Ver todas las notificaciones</a></li>
+                    </ul>
+                </div>
+            </div> -->
+
+            <main class="mx-1"> <!-- Este es el lugar donde se renderizará el contenido de cada vista -->
+                {% block content %}
+                <!-- El contenido de la página (debe ser definido en las plantillas que extiendan este archivo) -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/sweetalert2.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.6.0/dist/js/sb-admin-2.min.js"></script>
+
+    <script>
+        // Sidebar toggle for mobile
+        document.getElementById('sidebarToggleBtn').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('toggle');
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,42 +1,55 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 
-
-# Vista para el dashboard principal
-def dashboard_view(request):
-    return render(request, "dashboard/dashboard.html")
+from baseApp.forms import EstadoForm
+from baseApp.models import Estado
 
 
-# Vista para el resumen del dashboard
-def resumen_view(request):
-    return render(request, "dashboard/resumen.html")
+# Vista principal
+@login_required
+def inicio(request):
+    return render(request, "index.html")
 
 
-# # Vista para el login (procesa las credenciales)
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect(
-            "dashboard"
-        )  # Si ya está autenticado, lo redirigimos al dashboard
-
+@permission_required("proyectoApp.add_estado", login_url="/")
+def crearEstado(request):
+    form = Estado()
+    data = {"titulo": "Crear Estado", "formulario": form, "ruta": "estados"}
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        form = EstadoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Estado creado con éxito!!!")
+    return render(request, "proyecto/createProyecto.html", data)
 
-        # Intentamos autenticar al usuario
-        user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            # Si las credenciales son correctas, iniciamos sesión
-            login(request, user)
-            return redirect("dashboard")  # Redirigimos al dashboard
-        else:
-            # Si las credenciales son incorrectas, mostramos un mensaje de error
-            error_message = "Usuario o contraseña incorrectos."
-            return render(request, "registration/login.html", {"error_message": error_message})
+@permission_required("proyectoApp.change_estado", login_url="/")
+def actualizarEstado(request, id):
+    item = Estado.objects.get(pk=id)
+    form = EstadoForm(instance=item)
+    if request.method == "POST":
+        form = EstadoForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Estado editado con éxito")
+    data = {"titulo": "Editar Estado", "formulario": form, "ruta": "estados"}
+    return render(request, "proyecto/createProyecto.html", data)
 
-    return render(
-        request, "registration/login.html"
-    )  # Si el método no es POST, simplemente renderizamos el formulario
+
+@permission_required("proyectoApp.delete_estado", login_url="/")
+def eliminarEstado(request, id):
+    item = Estado.objects.get(pk=id)
+    item.delete()
+    return redirect("/proyecto/estados")
+
+
+@permission_required("proyectoApp.view_estado", login_url="/")
+def listarEstado(request):
+    estados = Estado.objects.all()
+    data = {"lista": estados}
+    return render(request, "proyecto/estado.html", data)

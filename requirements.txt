@@ -1,4 +1,2 @@
 django
 mysql-connector-python
-django-crispy-forms
-crispy-bootstrap5

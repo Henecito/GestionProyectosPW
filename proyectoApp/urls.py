@@ -7,6 +7,7 @@ urlpatterns = [
     path("proyectos/", views.listarProyecto, name="proyectos"),
     path("editarproyecto/<int:id>", views.actualizarProyecto, name="editarproyecto"),
     path("eliminarproyecto/<int:id>", views.eliminarProyecto, name="eliminarproyecto"),
+
     # ----- Documento -----
     path("creardocumento/", views.crearDocumento, name="creardocumento"),
     path("documentos/", views.listarDocumento, name="documentos"),
@@ -20,14 +21,16 @@ urlpatterns = [
         views.eliminarDocumento,
         name="eliminardocumento",
     ),
+
     # ----- Actividad -----
     path("crearactividad/", views.crearActividad, name="crearactividad"),
     path("actividades/", views.listarActividad, name="actividades"),
     path("editaractividad/<int:id>", views.actualizarActividad, name="editaractividad"),
     path(
-        "eliminaractividad/<int:id>", views.eliminarDocumento, name="eliminaractividad"
+        "eliminaractividad/<int:id>", views.eliminarActividad, name="eliminaractividad"
     ),
-    # Urls para Cliente
+
+    # ----- Cliente -----
     path("clientes/", views.ClienteListView.as_view(), name="cliente_list"),
     path("clientes/crear/", views.ClienteCreateView.as_view(), name="cliente_crear"),
     path(
@@ -41,3 +44,4 @@ urlpatterns = [
         name="cliente_eliminar",
     ),
 ]
+

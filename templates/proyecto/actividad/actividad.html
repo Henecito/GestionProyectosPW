@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1>Actividades</h1>
+    <a href="{% url 'crearactividad' %}" class="btn btn-primary">Crear Actividad</a>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Nombre Actividad</th>
+                <th>Descripción</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for actividad in lista %}
+                <tr>
+                    <td>{{ actividad.nombre_actividad }}</td>
+                    <td>{{ actividad.descripcion }}</td>
+                    <td>{{ actividad.fecha_inicio }}</td>
+                    <td>{{ actividad.fecha_fin }}</td>
+                    <td>
+                        <a href="{% url 'editaractividad' actividad.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminaractividad' actividad.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

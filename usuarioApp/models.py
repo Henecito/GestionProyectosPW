@@ -63,11 +63,11 @@ class Empleado(models.Model):
         max_length=12, validators=[telefono_validator]
     )
 
-    fk_id_estado = models.ForeignKey(
-        Estado, on_delete=models.CASCADE, related_name="empleados"
-    )
+    # fk_id_estado = models.ForeignKey(
+    #     Estado, on_delete=models.CASCADE, related_name="empleados"
+    # )
     fk_id_subarea = models.ForeignKey(
-        SubArea, on_delete=models.CASCADE, related_name="empleados"
+        SubArea, null=True, on_delete=models.CASCADE, related_name="empleados"
     )
     user = models.OneToOneField(
         Usuario,

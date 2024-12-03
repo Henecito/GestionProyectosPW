@@ -20,6 +20,11 @@ class SubAreaForm(forms.ModelForm):
         }
 
 
+from django import forms
+from django.contrib.auth.models import User  # Importa el modelo de Usuario
+from .models import Empleado
+from django.core.exceptions import ValidationError
+
 class EmpleadoForm(forms.ModelForm):
     # Validador de RUT chileno
     rut_validator = RegexValidator(
@@ -83,6 +88,31 @@ class EmpleadoForm(forms.ModelForm):
             "carrera": forms.TextInput(attrs={"class": "form-control"}),
             "contacto_emergencia": forms.TextInput(attrs={"class": "form-control"}),
         }
+
+    # Sobrescribir el método save para crear el Usuario
+    def save(self, commit=True):
+        # Crear el Empleado sin guardarlo todavía
+        empleado = super().save(commit=False)
+
+        # Verificar si ya existe un Usuario con el email, si no lo crea
+        if not User.objects.filter(email=empleado.email).exists():
+            usuario = User.objects.create_user(
+                username=empleado.rut,  # Usamos el email como username
+                email=empleado.email,
+                password="defaultpassword",  # Cambiar esta contraseña o hacerla dinámica
+                first_name=empleado.nombre,
+                last_name=empleado.apellidos
+            )
+            # Asignamos el Usuario al Empleado
+            empleado.user = usuario
+        else:
+            raise ValidationError("Ya existe un usuario con este correo electrónico")
+
+        # Guardamos el Empleado, ya con el Usuario asignado
+        if commit:
+            empleado.save()
+        return empleado
+
 
     def clean_rut(self):
         # Método de validación y formateo de RUT

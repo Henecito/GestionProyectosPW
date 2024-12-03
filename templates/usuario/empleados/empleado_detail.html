@@ -1,0 +1,66 @@
+{% extends 'index.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Detalle de Empleado</h2>
+    <table class="table">
+      <tr>
+        <th>RUT</th>
+        <td>{{ object.rut }}</td>
+      </tr>
+      <tr>
+        <th>Nombre</th>
+        <td>{{ object.nombre }}</td>
+      </tr>
+      <tr>
+        <th>Apellidos</th>
+        <td>{{ object.apellidos }}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ object.email }}</td>
+      </tr>
+      <tr>
+        <th>Fecha de Nacimiento</th>
+        <td>{{ object.fecha_nac }}</td>
+      </tr>
+      <tr>
+        <th>Nacionalidad</th>
+        <td>{{ object.nacionalidad }}</td>
+      </tr>
+      <tr>
+        <th>Dirección</th>
+        <td>{{ object.direccion }}</td>
+      </tr>
+      <tr>
+        <th>AFP</th>
+        <td>{{ object.afp }}</td>
+      </tr>
+      <tr>
+        <th>Plan de Salud</th>
+        <td>{{ object.plan_salud }}</td>
+      </tr>
+      <tr>
+        <th>Carrera</th>
+        <td>{{ object.carrera }}</td>
+      </tr>
+      <tr>
+        <th>Teléfono</th>
+        <td>{{ object.telefono }}</td>
+      </tr>
+      <tr>
+        <th>Contacto de Emergencia</th>
+        <td>{{ object.contacto_emergencia }}</td>
+      </tr>
+      <tr>
+        <th>Estado</th>
+        <td>{{ object.fk_id_estado }}</td>
+      </tr>
+      <tr>
+        <th>SubÁrea</th>
+        <td>{{ object.fk_id_subarea }}</td>
+      </tr>
+    </table>
+    <a href="{% url 'empleado_list' %}" class="btn btn-secondary">Volver</a>
+  </div>
+{% endblock %}

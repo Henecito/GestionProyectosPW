@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1>Proyectos</h1>
+    <a href="{% url 'crearproyecto' %}" class="btn btn-primary">Crear Proyecto</a>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Nombre Proyecto</th>
+                <th>Encargado (PW)</th>
+                <th>Encargado (CL)</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for proyecto in lista %}
+                <tr>
+                    <td>{{ proyecto.nombre_proyecto }}</td>
+                    <td>{{ proyecto.encargado_proyecto_pw }}</td>
+                    <td>{{ proyecto.encargado_proyecto_cl }}</td>
+                    <td>{{ proyecto.fecha_inicio }}</td>
+                    <td>{{ proyecto.fecha_fin }}</td>
+                    <td>
+                        <a href="{% url 'editarproyecto' proyecto.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminarproyecto' proyecto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

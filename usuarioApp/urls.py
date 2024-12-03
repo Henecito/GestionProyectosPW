@@ -36,5 +36,6 @@ urlpatterns = [
         views.EmpleadoDeleteView.as_view(),
         name="empleado_eliminar",
     ),
+    path('usuarios/', views.UserListView.as_view(), name='lista_usuarios'),
     # Urls para asignar 
 ]

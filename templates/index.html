@@ -32,7 +32,7 @@
                 <a href="#" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="{% url 'proyectos' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Nuevo proyecto
                 </a>
                 <a href="#" class="list-group-item">
@@ -43,7 +43,7 @@
                         <i class="fas fa-project-diagram"></i> Proyectos
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Ver todos los proyectos</a>
+                        <li><a class="dropdown-item" href="{% url 'proyectos' %}">Ver todos los proyectos</a>
                         </li>
                         <li><a class="dropdown-item" href="#">Proyectos completados</a></li>
                         <li><a class="dropdown-item" href="#">Proyectos en curso</a></li>
@@ -65,14 +65,17 @@
                 <a href="/admin/" class="list-group-item">
                     <i class="fas fa-cogs"></i> Admin
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="{% url 'empleado_list' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Empleados
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="{% url 'lista_usuarios' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Usuarios
                 </a>
                 <a href="#" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Grupos
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Area
                 </a>
                 {% endif %}
 
@@ -89,7 +92,7 @@
             {% if user.is_authenticated %}
             <div class="dropdown position-fixed bottom-0 start-0 m-3">
                 <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user-circle"></i> Bienvenid@ {{ user.username }}
+                    <i class="fas fa-user-circle"></i> Hola {{ user.first_name }}
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <li>

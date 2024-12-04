@@ -1,0 +1,46 @@
+<!-- templates/dashboard/resumen.html -->
+{% extends 'index.html' %}
+
+{% block content %}
+    <h1>Resumen del Dashboard</h1>
+
+    <!-- Gráfico de barras -->
+    <div style="width: 80%; margin: 0 auto;">
+        <canvas id="summaryChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var ctx = document.getElementById('summaryChart').getContext('2d');
+        var summaryChart = new Chart(ctx, {
+            type: 'bar',  // Tipo de gráfico (barras)
+            data: {
+                labels: {{ labels|safe }},  // Etiquetas (Proyectos, Clientes, Empleados)
+                datasets: [{
+                    label: 'Resumen de Datos',
+                    data: {{ data|safe }},  // Los datos que pasamos desde la vista
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',  // Color para proyectos
+                        'rgba(54, 162, 235, 0.2)',  // Color para clientes
+                        'rgba(255, 206, 86, 0.2)'   // Color para empleados
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

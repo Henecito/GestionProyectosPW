@@ -1,5 +1,6 @@
 from django.urls import path
 from proyectoApp import views
+from .views import resumenDashboard
 
 urlpatterns = [
     # ----- Proyecto -----
@@ -43,5 +44,6 @@ urlpatterns = [
         views.ClienteDeleteView.as_view(),
         name="cliente_eliminar",
     ),
+    path('resumen/', resumenDashboard, name='resumen'),
 ]
 

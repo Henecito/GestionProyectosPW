@@ -12,6 +12,7 @@ from django.contrib import messages
 from proyectoApp.models import Cliente, Proyecto, Documento, Actividad
 from proyectoApp.forms import ClienteForm, ProyectoForm, DocumentoForm, ActividadForm
 from django.contrib.auth.decorators import login_required, permission_required
+from usuarioApp.models import Empleado
 
 
 # Cliente
@@ -56,16 +57,25 @@ class ClienteDeleteView(LoginRequiredMixin, DeleteView):
 
 # ----- Proyecto -----
 
-
 @permission_required("proyectoApp.add_proyecto", login_url="/")
 def crearProyecto(request):
-    form = Proyecto()
-    data = {"titulo": "Crear Proyecto", "formulario": form, "ruta": "proyectos"}
     if request.method == "POST":
-        form = ProyectoForm(request.POST)
+        form = ProyectoForm(request.POST)  # Asegúrate de estar utilizando ProyectoForm
         if form.is_valid():
             form.save()
-            messages.success(request, "Proyectos creado con éxito!!!")
+            messages.success(request, "¡Proyecto creado con éxito!")
+            return redirect("proyectos")  # Redirigir a la página de proyectos después de guardar
+        else:
+            messages.error(request, "Hubo un error al crear el proyecto.")
+    else:
+        form = ProyectoForm()  # Cuando es un GET, crea un formulario vacío
+
+    data = {
+        "titulo": "Crear Proyecto",
+        "formulario": form,
+        "ruta": "proyectos"
+    }
+
     return render(request, "proyecto/proyecto/createProyecto.html", data)
 
 
@@ -177,3 +187,24 @@ def eliminarActividad(request, id):
     item.delete()
     messages.success(request, "Actividad eliminada con éxito.")
     return redirect("actividad_list")
+
+
+# ----- Resumen -----
+
+@permission_required("proyectoApp.view_dashboard", login_url="/")
+def resumenDashboard(request):
+    # Conteo de los objetos que necesitas
+    total_proyectos = Proyecto.objects.count()  # Conteo de proyectos
+    total_clientes = Cliente.objects.count()    # Conteo de clientes
+    total_empleados = Empleado.objects.count()  # Conteo de empleados
+    
+    # Pasa estos datos al template
+    context = {
+        'total_proyectos': total_proyectos,
+        'total_clientes': total_clientes,
+        'total_empleados': total_empleados,
+        'labels': ['Proyectos', 'Clientes', 'Empleados'],
+        'data': [total_proyectos, total_clientes, total_empleados],
+    }
+
+    return render(request, 'dashboard/resumen.html', context)

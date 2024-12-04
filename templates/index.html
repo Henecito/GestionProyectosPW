@@ -29,13 +29,13 @@
                 <!-- Gerente -->
 
                 {% if not user.is_superuser %}
-                <a href="#" class="list-group-item">
+                <a href="{% url 'resumen' %}" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>
                 <a href="{% url 'proyectos' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Nuevo proyecto
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="{% url 'cliente_list' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Nuevo cliente
                 </a>
                 <div class="dropdown">
@@ -54,7 +54,7 @@
                         <i class="fas fa-project-diagram"></i> Clientes
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Ver todos los clientes</a>
+                        <li><a class="dropdown-item" href="{% url 'cliente_list' %}">Ver todos los clientes</a>
                         </li>
                     </ul>
                 </div>

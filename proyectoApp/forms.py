@@ -25,14 +25,12 @@ class ProyectoForm(forms.ModelForm):
             "encargado_proyecto_pw",
             "encargado_proyecto_cl",
             "fk_id_cliente",
-            "fk_id_estado",
         ]
         widgets = {
             "nombre_proyecto": forms.TextInput(attrs={"class": "form-control"}),
             "encargado_proyecto_pw": forms.TextInput(attrs={"class": "form-control"}),
             "encargado_proyecto_cl": forms.TextInput(attrs={"class": "form-control"}),
             "fk_id_cliente": forms.Select(attrs={"class": "form-select"}),
-            "fk_id_estado": forms.Select(attrs={"class": "form-select"}),
         }
 
 

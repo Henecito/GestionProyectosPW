@@ -38,7 +38,7 @@ class Proyecto(models.Model):
         Cliente, on_delete=models.CASCADE, related_name="proyectos"
     )
     fk_id_estado = models.ForeignKey(
-        Estado, on_delete=models.CASCADE, related_name="proyectos"
+        Estado, null=True, on_delete=models.CASCADE, related_name="proyectos"
     )
 
     def __str__(self):

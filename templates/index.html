@@ -26,7 +26,7 @@
                 {% if user.is_authenticated %}
                 <!-- Gerente de recursos -->
                 <!-- Gerente -->
-                {% if not user.is_superuser %}
+                {% if user.is_superuser %}
                 <a href="{% url 'resumen' %}" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>

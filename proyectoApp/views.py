@@ -105,6 +105,11 @@ def eliminarProyecto(request, id):
     item.delete()
     return redirect("proyecto/proyecto/proyectos")
 
+def documento(request, id):
+    item = Proyecto.objects.get(pk=id)
+    item.delete()
+    return redirect("proyecto/proyecto/documento")
+
 
 # ----- Documento -----
 

@@ -1,5 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User  # Corregido
 from .models import Area, SubArea, Empleado, Asignar
 
 
@@ -21,7 +22,7 @@ class SubAreaForm(forms.ModelForm):
 
 
 from django import forms
-from django.contrib.auth.models import User  # Importa el modelo de Usuario
+from django.contrib.auth.models import User  
 from .models import Empleado
 from django.core.exceptions import ValidationError
 
@@ -171,3 +172,8 @@ class AsignarForm(forms.ModelForm):
             "fk_rut_empleado": forms.Select(attrs={"class": "form-select"}),
             "fk_id_actividad": forms.Select(attrs={"class": "form-select"}),
         }
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['password']

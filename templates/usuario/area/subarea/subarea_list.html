@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% block content %}
+  <h1>SubÁreas</h1>
+  <p>
+    <a href="{% url 'subarea_crear' %}" class="btn btn-primary">Crear SubÁrea</a>
+  </p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Área</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subarea in subareas %}
+        <tr>
+          <td>{{ subarea.nombre }}</td>
+          <td>{{ subarea.fk_id_area.nombre }}</td>
+          <td>
+            <a href="{% url 'subarea_editar' subarea.pk %}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="{% url 'subarea_eliminar' subarea.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">No hay subáreas disponibles.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

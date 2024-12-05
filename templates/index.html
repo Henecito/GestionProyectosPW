@@ -24,11 +24,9 @@
             </div>
             <div class="list-group">
                 {% if user.is_authenticated %}
-                <!-- Empleado -->
                 <!-- Gerente de recursos -->
                 <!-- Gerente -->
-
-                {% if not user.is_superuser %}
+                {% if user.is_superuser %}
                 <a href="{% url 'resumen' %}" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>
@@ -59,7 +57,6 @@
                     </ul>
                 </div>
                 {% endif %}
-                    
                 <!-- Admin -->
                 {% if user.is_superuser %}
                 <a href="/admin/" class="list-group-item">
@@ -74,8 +71,11 @@
                 <a href="#" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Grupos
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="{% url 'area_list' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Area
+                </a>
+                <a href="{% url 'subarea_list' %}" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Sub-Area
                 </a>
                 {% endif %}
 
@@ -90,35 +90,36 @@
             </div>
 
             {% if user.is_authenticated %}
-            <div class="dropdown position-fixed bottom-0 start-0 m-3">
-                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user-circle"></i> Hola {{ user.first_name }}
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                    <li>
-                        <a class="dropdown-item" href="">
-                            <i class="fas fa-user"></i> Mi perfil
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="">
-                            <i class="fas fa-cogs"></i> Configuración
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="dropdown-item text-danger">
-                                <i class="fas fa-sign-out-alt"></i> Salir
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>            
-            {% endif %}
+    <div class="dropdown position-fixed bottom-0 start-0 m-3">
+        <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle"></i> Hola {{ user.first_name }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li>
+                <a class="dropdown-item" href="{% url 'user_profile' pk=user.pk %}">
+                    <i class="fas fa-user"></i> Mi perfil
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#">
+                    <i class="fas fa-cogs"></i> Configuración
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+{% endif %}
+
         </nav>
 
         <!-- Mobile Toggle Button -->

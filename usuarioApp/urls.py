@@ -37,5 +37,7 @@ urlpatterns = [
         name="empleado_eliminar",
     ),
     path('usuarios/', views.UserListView.as_view(), name='lista_usuarios'),
-    # Urls para asignar 
+    path('usuarios/perfil/<int:pk>/', views.UserProfileUpdateView.as_view(), name='user_profile'),
+    path('usuarios/perfil/editar/<int:pk>/', views.UserProfileUpdateView.as_view(), name='user_profile_edit'),
+    path('usuarios/perfil/cambiar-contrasena/', views.PasswordChangeView.as_view(), name='password_change'),
 ]

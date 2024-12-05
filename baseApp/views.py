@@ -16,20 +16,21 @@ def inicio(request):
     return render(request, "index.html")
 
 
-@permission_required("proyectoApp.add_estado", login_url="/")
+# @permission_required("baseApp.add_estado", login_url="/")
 def crearEstado(request):
-    form = Estado()
-    data = {"titulo": "Crear Estado", "formulario": form, "ruta": "estados"}
+    form = EstadoForm()  # Cambia esto de 'Estado()' a 'EstadoForm()'
+    data = {"titulo": "Crear Estado", "form": form, "ruta": "estados"}
     if request.method == "POST":
-        form = EstadoForm(request.POST)
+        form = EstadoForm(request.POST)  # Usa 'EstadoForm' también aquí
         if form.is_valid():
             form.save()
             messages.success(request, "Estado creado con éxito!!!")
-    return render(request, "proyecto/createProyecto.html", data)
+            return redirect('estados')  # Redirige al listado de estados después de guardar
+    return render(request, "base/estado/form.html", data)
 
 
-@permission_required("proyectoApp.change_estado", login_url="/")
-def actualizarEstado(request, id):
+# @permission_required("baseApp.change_estado", login_url="/")
+def editarEstado(request, id):
     item = Estado.objects.get(pk=id)
     form = EstadoForm(instance=item)
     if request.method == "POST":
@@ -37,19 +38,23 @@ def actualizarEstado(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, "Estado editado con éxito")
-    data = {"titulo": "Editar Estado", "formulario": form, "ruta": "estados"}
-    return render(request, "proyecto/createProyecto.html", data)
+            return redirect('estados')  # Redirige después de guardar para evitar reenvíos al refrescar
 
+    data = {"titulo": "Editar Estado", "form": form, "ruta": "estados"}
+    return render(request, "base/estado/form.html", data)
 
-@permission_required("proyectoApp.delete_estado", login_url="/")
+# @permission_required("baseApp.delete_estado", login_url="/")
 def eliminarEstado(request, id):
     item = Estado.objects.get(pk=id)
     item.delete()
     return redirect("/proyecto/estados")
 
 
-@permission_required("proyectoApp.view_estado", login_url="/")
+# @permission_required("baseApp.view_estado", login_url="/")
 def listarEstado(request):
     estados = Estado.objects.all()
-    data = {"lista": estados}
-    return render(request, "proyecto/estado.html", data)
+    paginator = Paginator(estados, 10)  # Show 10 states per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    data = {"lista": page_obj}
+    return render(request, "base/estado/list.html", data)

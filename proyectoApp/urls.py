@@ -11,7 +11,7 @@ urlpatterns = [
 
     # ----- Documento -----
     path("creardocumento/", views.crearDocumento, name="creardocumento"),
-    path("proyecto/documentos/documento.html", views.listarDocumento, name="documentos"),
+    path("listardocumentos/", views.listarDocumento, name="listardocumentos"),
     path(
         "editardocumento/<int:codigo>",
         views.actualizarDocumento,

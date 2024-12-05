@@ -9,8 +9,8 @@ urlpatterns = [
     path('proyecto/', include('proyectoApp.urls')),
     path('usuario/', include('usuarioApp.urls')),
     # ----- Estado -----
-    path("crearestado/", views.crearEstado, name="crearestado"),
+    path("crearestado/", views.crearEstado, name="crearEstado"),
     path("estados/", views.listarEstado, name="estados"),
-    path("editarestado/<int:id>", views.actualizarEstado, name="editarestado"),
-    path("eliminarestado/<int:id>", views.eliminarEstado, name="eliminarestado"),
+    path("actualizarEstado/<int:id>", views.editarEstado, name="actualizarEstado"),
+    path("eliminarestado/<int:id>", views.eliminarEstado, name="eliminarEstado"),
 ]

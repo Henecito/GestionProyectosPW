@@ -60,9 +60,9 @@ class Documento(models.Model):
     fk_id_proyecto = models.ForeignKey(
         Proyecto, on_delete=models.CASCADE, related_name="documentos"
     )
-    fk_id_estado = models.ForeignKey(
-        Estado, on_delete=models.CASCADE, related_name="documentos"
-    )
+    # fk_id_estado = models.ForeignKey(
+    #     Estado, on_delete=models.CASCADE, related_name="documentos"
+    # )
 
     def __str__(self):
         return self.revision

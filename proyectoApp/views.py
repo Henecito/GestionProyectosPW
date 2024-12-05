@@ -108,15 +108,15 @@ def eliminarProyecto(request, id):
 def documento(request, id):
     item = Proyecto.objects.get(pk=id)
     item.delete()
-    return redirect("proyecto/proyecto/documento")
+    return redirect("proyecto/documentos/documento")
 
 
 # ----- Documento -----
 
-@permission_required("proyectoApp.add_documento", login_url="/")
+# @permission_required("proyectoApp.add_documento", login_url="/")
 def crearDocumento(request):
     form = Documento()
-    data = {"titulo": "Crear Documento", "formulario": form, "ruta": "documentos"}
+    data = {"titulo": "Crear Documento", "form": form, "ruta": "documentos"}
     if request.method == "POST":
         form = DocumentoForm(request.POST)
         if form.is_valid():
@@ -125,13 +125,13 @@ def crearDocumento(request):
             return redirect("documento_list")
     return render(request, "proyecto/documentos/createDocumento.html", data)
 
-@permission_required("proyectoApp.view_documento", login_url="/")
+# @permission_required("proyectoApp.view_documento", login_url="/")
 def listarDocumento(request):
     documentos = Documento.objects.all()
     data = {"lista": documentos}
     return render(request, "proyecto/documentos/documento.html", data)
 
-@permission_required("proyectoApp.change_documento", login_url="/")
+# @permission_required("proyectoApp.change_documento", login_url="/")
 def actualizarDocumento(request, codigo):
     item = Documento.objects.get(pk=codigo)
     form = DocumentoForm(instance=item)
@@ -144,7 +144,7 @@ def actualizarDocumento(request, codigo):
     data = {"titulo": "Editar Documento", "formulario": form, "ruta": "documentos"}
     return render(request, "proyecto/documentos/createDocumento.html", data)
 
-@permission_required("proyectoApp.delete_documento", login_url="/")
+# @permission_required("proyectoApp.delete_documento", login_url="/")
 def eliminarDocumento(request, id):
     item = Documento.objects.get(pk=id)
     item.delete()

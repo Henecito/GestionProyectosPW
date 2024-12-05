@@ -1,0 +1,48 @@
+{% extends "index.html" %}
+
+
+{% if messages %}
+
+{% for msj in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: '¡Formulario Guardado!',
+        text: 'Los cambios se han guardado exitosamente.',
+        confirmButtonText: 'Aceptar'
+      });
+    </script>
+{% endfor %}
+    
+    
+{% endif %}
+    
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Listado de Estados</h2>
+    <a href="{% url 'crearEstado' %}" class="btn btn-success mb-3">Crear Nuevo Estado</a>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for estado in lista %}
+          <tr>
+            <td>{{ estado.nombre }}</td>
+            <td>{{ estado.desc }}</td>
+            <td>
+              <a href="{% url 'actualizarEstado' estado.id %}" class="btn btn-warning btn-sm">Editar</a>
+              <a href="{% url 'eliminarEstado' estado.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este estado?');">Eliminar</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -23,7 +23,7 @@
                     <td>{{ proyecto.fecha_inicio }}</td>
                     <td>{{ proyecto.fecha_fin }}</td>
                     <td>
-                        <a href="{% url 'documentos' %}" class="btn btn-success btn-sm">Documentos</a>
+                        <a href="{% url 'listardocumentos' %}" class="btn btn-success btn-sm">Documentos</a>
                         <a href="{% url 'editarproyecto' proyecto.id %}" class="btn btn-warning btn-sm">Editar</a>
                         <a href="{% url 'eliminarproyecto' proyecto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
                     </td>

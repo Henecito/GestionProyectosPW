@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>{{ titulo }}</h2>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form }}
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+    <br>
+    <a href="{% url ruta %}" class="btn btn-secondary">Volver al listado</a>
+  </div>
+
+  {% if form_is_valid %}
+  {% endif %}
+{% endblock %}

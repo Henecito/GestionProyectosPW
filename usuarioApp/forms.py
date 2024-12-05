@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .models import Area, SubArea, Empleado, Asignar
 from django.contrib.auth.forms import PasswordChangeForm
 
@@ -182,3 +182,25 @@ class PasswordChangeFormCustom(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['password']
+    
+#Grupo
+class AsignarUsuariosAGrupoForm(forms.Form):
+    # Usamos ModelMultipleChoiceField para permitir seleccionar varios usuarios
+    usuarios = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),  # Usar el widget predeterminado
+        label="Selecciona usuarios",
+        required=True,
+    )
+
+    # Usamos ModelChoiceField para permitir seleccionar un único grupo
+    grupo = forms.ModelChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.Select(),  # Usar el widget predeterminado
+        label="Selecciona grupo",
+        required=True,
+    )
+
+
+
+

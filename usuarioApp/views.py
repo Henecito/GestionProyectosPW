@@ -10,11 +10,11 @@ from django.views.generic import (
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.contrib.auth.views import PasswordChangeView
 
 from .models import Area, SubArea, Empleado, Asignar
-from .forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom
+from .forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom, AsignarUsuariosAGrupoForm
 
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
@@ -200,3 +200,25 @@ class PasswordChangeView(PasswordChangeView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+    
+#Grupos
+class AsignarUsuariosAGrupoView(View):
+    def get(self, request):
+        form = AsignarUsuariosAGrupoForm()
+        return render(request, 'usuario/grupos/asignar_grupo.html', {'form': form})
+
+    def post(self, request):
+        form = AsignarUsuariosAGrupoForm(request.POST)
+        if form.is_valid():
+            usuarios = form.cleaned_data['usuarios']
+            grupo = form.cleaned_data['grupo']
+
+            # Asignar los usuarios seleccionados al grupo
+            for usuario in usuarios:
+                usuario.groups.add(grupo)
+                messages.success(request, f"Usuario {usuario.username} asignado a {grupo.name}.")
+
+            return redirect('inicio')  # Redirige a la misma página o a otra
+
+        return render(request, 'usuario/grupos/asignar_grupo.html', {'form': form})
+    

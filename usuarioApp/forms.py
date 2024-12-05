@@ -1,14 +1,16 @@
 from django import forms
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import User  # Corregido
+from django.contrib.auth.models import User
 from .models import Area, SubArea, Empleado, Asignar
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class AreaForm(forms.ModelForm):
     class Meta:
         model = Area
-        fields = ["nombre"]
-        widgets = {"nombre": forms.TextInput(attrs={"class": "form-control"})}
+        fields = ["nombre", "descripcion"]
+        widgets = {"nombre": forms.TextInput(attrs={"class": "form-control"}),
+                   "descripcion": forms.Textarea(attrs={"class": "form-control", "rows": 2})}
 
 
 class SubAreaForm(forms.ModelForm):
@@ -77,6 +79,7 @@ class EmpleadoForm(forms.ModelForm):
             "carrera",
             "telefono",
             "contacto_emergencia",
+            "fk_id_subarea",
         ]
 
         widgets = {
@@ -88,6 +91,7 @@ class EmpleadoForm(forms.ModelForm):
             "plan_salud": forms.TextInput(attrs={"class": "form-control"}),
             "carrera": forms.TextInput(attrs={"class": "form-control"}),
             "contacto_emergencia": forms.TextInput(attrs={"class": "form-control"}),
+            "fk_id_subarea": forms.Select(attrs={"class": "form-selectl"})
         }
 
     # Sobrescribir el método save para crear el Usuario
@@ -173,7 +177,8 @@ class AsignarForm(forms.ModelForm):
             "fk_id_actividad": forms.Select(attrs={"class": "form-select"}),
         }
 
-class UserUpdateForm(forms.ModelForm):
+#Password
+class PasswordChangeFormCustom(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['password']

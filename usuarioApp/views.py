@@ -11,15 +11,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic import ListView
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView
 
 from .models import Area, SubArea, Empleado, Asignar
-from .forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm
+from .forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom
 
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm  
 
 
 # Vista para Área
@@ -182,24 +181,22 @@ class UserListView(LoginRequiredMixin, ListView):
     template_name = "usuario/usuarios/lista_usuarios.html" 
     context_object_name = "usuarios"
 
-class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
-    model = User
-    form_class = UserUpdateForm
-    template_name = "usuario/perfil/user_profile_form.html"
-    success_url = reverse_lazy("user_profile")
+class PasswordChangeView(PasswordChangeView):
+    form_class = PasswordChangeFormCustom  # Tu formulario personalizado
+    template_name = 'usuario/perfil/password_change_form.html'
+    success_url = reverse_lazy("password_change")  # Redirigir a la página de inicio tras un cambio exitoso
 
     def form_valid(self, form):
-        messages.success(self.request, "Datos actualizados exitosamente.")
-        return super().form_valid(form)
-
-class PasswordChangeView(LoginRequiredMixin, UpdateView):
-    model = User
-    form_class = PasswordChangeForm
-    template_name = "usuario/perfil/password_change_form.html"
-    success_url = reverse_lazy("user_profile")
-
-    def form_valid(self, form):
+        # Guardar la nueva contraseña
         user = form.save()
-        update_session_auth_hash(self.request, user)  # Mantener la sesión activa después de cambiar la contraseña
+
+        # Actualizar la sesión para que el usuario no se desloguee tras cambiar la contraseña
+        update_session_auth_hash(self.request, user)  
+
+        # Mostrar mensaje de éxito
         messages.success(self.request, "Contraseña cambiada exitosamente.")
+        
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)

@@ -4,7 +4,6 @@
 {% if messages %}
 
 {% for msj in messages %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   Swal.fire({
     icon: 'success',
@@ -104,9 +103,9 @@
     console.log('SweetAlert2 disponible:', !!Swal);
 
     // Manejar mensajes de Django
-    {% if messages %}
+    // {% if messages %}
     console.log('Hay mensajes de Django');
-    {% for message in messages %}
+    // {% for message in messages %}
     console.log('Mensaje:', '{{ message }}', 'Tipo:', '{{ message.tags }}');
     Swal.fire({
       icon: '{{ message.tags }}' === 'error' ? 'error' :
@@ -118,10 +117,10 @@
       timer: 3000,
       timerProgressBar: true
     });
-    {% endfor %}
-    {% else %}
+    // {% endfor %}
+    // {% else %}
     console.log('No hay mensajes de Django');
-    {% endif %}
+    // {% endif %}
 
     // Formulario de crear/editar estado
     const estadoForm = document.getElementById('estadoForm');

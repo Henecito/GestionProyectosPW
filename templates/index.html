@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/sweetalert2.min.css' %}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.6.0/dist/css/sb-admin-2.min.css"
         rel="stylesheet">
@@ -62,6 +63,9 @@
                 <a href="/admin/" class="list-group-item">
                     <i class="fas fa-cogs"></i> Admin
                 </a>
+                <a href="{% url 'gestionar_estados' %}" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Estados
+                </a>
                 <a href="{% url 'empleado_list' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Empleados
                 </a>
@@ -77,9 +81,6 @@
                 <a href="{% url 'subarea_list' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Sub-Area
                 </a>
-                <a href="{% url 'estados' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Estados
-                </a>
                 {% endif %}
 
                 {% else %}
@@ -93,35 +94,36 @@
             </div>
 
             {% if user.is_authenticated %}
-    <div class="dropdown position-fixed bottom-0 start-0 m-3">
-        <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user-circle"></i> Hola {{ user.first_name }}
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-            <li>
-                <a class="dropdown-item" href="{% url 'password_change' %}">
-                    <i class="fas fa-user"></i> Mi perfil
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="#">
-                    <i class="fas fa-cogs"></i> Configuración
-                </a>
-            </li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li>
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="dropdown-item text-danger">
-                        <i class="fas fa-sign-out-alt"></i> Salir
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </div>
-{% endif %}
+            <div class="dropdown position-fixed bottom-0 start-0 m-3">
+                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> Hola {{ user.first_name }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'password_change' %}">
+                            <i class="fas fa-user"></i> Mi perfil
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs"></i> Configuración
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item text-danger">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
 
         </nav>
 
@@ -166,6 +168,8 @@
             document.getElementById('sidebar').classList.toggle('toggle');
         });
     </script>
+
+    {% block javascript %}{% endblock %}
 
 </body>
 

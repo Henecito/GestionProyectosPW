@@ -37,9 +37,9 @@ class Proyecto(models.Model):
     fk_id_cliente = models.ForeignKey(
         Cliente, on_delete=models.CASCADE, related_name="proyectos"
     )
-    fk_id_estado = models.ForeignKey(
-        Estado, null=True, on_delete=models.CASCADE, related_name="proyectos"
-    )
+    # estado = models.ForeignKey(
+    #     Estado, on_delete=models.PROTECT, limit_choices_to={"modelo": "Proyecto"}
+    # )
 
     def __str__(self):
         return self.nombre_proyecto
@@ -60,8 +60,8 @@ class Documento(models.Model):
     fk_id_proyecto = models.ForeignKey(
         Proyecto, on_delete=models.CASCADE, related_name="documentos"
     )
-    # fk_id_estado = models.ForeignKey(
-    #     Estado, on_delete=models.CASCADE, related_name="documentos"
+    # estado = models.ForeignKey(
+    #     Estado, on_delete=models.PROTECT, limit_choices_to={"modelo": "Documento"}
     # )
 
     def __str__(self):
@@ -81,9 +81,9 @@ class Actividad(models.Model):
     fk_id_codigo = models.ForeignKey(
         Documento, on_delete=models.CASCADE, related_name="actividades"
     )
-    fk_id_estado = models.ForeignKey(
-        Estado, on_delete=models.CASCADE, related_name="actividades"
-    )
+    # estado = models.ForeignKey(
+    #     Estado, on_delete=models.PROTECT, limit_choices_to={"modelo": "Actividad"}
+    # )
 
     def __str__(self):
         return self.nombre_actividad

@@ -5,44 +5,165 @@
 
 {% for msj in messages %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-      Swal.fire({
-        icon: 'success',
-        title: '¡Formulario Guardado!',
-        text: 'Los cambios se han guardado exitosamente.',
-        confirmButtonText: 'Aceptar'
-      });
-    </script>
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: '¡Formulario Guardado!',
+    text: 'Los cambios se han guardado exitosamente.',
+    confirmButtonText: 'Aceptar'
+  });
+</script>
 {% endfor %}
-    
-    
+
+
 {% endif %}
-    
+
 
 {% block content %}
-  <div class="container mt-5">
-    <h2>Listado de Estados</h2>
-    <a href="{% url 'crearEstado' %}" class="btn btn-success mb-3">Crear Nuevo Estado</a>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for estado in lista %}
-          <tr>
-            <td>{{ estado.nombre }}</td>
-            <td>{{ estado.desc }}</td>
-            <td>
-              <a href="{% url 'actualizarEstado' estado.id %}" class="btn btn-warning btn-sm">Editar</a>
-              <a href="{% url 'eliminarEstado' estado.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este estado?');">Eliminar</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          {% if estado_editando %}
+          Editar Estado
+          {% else %}
+          Crear Nuevo Estado
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <form method="post" id="estadoForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">
+              {% if estado_editando %}
+              Actualizar Estado
+              {% else %}
+              Guardar Estado
+              {% endif %}
+            </button>
+            {% if estado_editando %}
+            <a href="{% url 'gestionar_estados' %}" class="btn btn-secondary">Cancelar</a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      {% for modelo, estados in estados_por_modelo.items %}
+      <h3 class="mt-4 text-capitalize">Estados de {{ modelo }}</h3>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="col-1">Color</th>
+              <th class="col-1">Nombre</th>
+              <th class="col-3">Descripción</th>
+              <th class="col-2">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for estado in estados %}
+            {% if estado_editando == estado %}
+            <tr class="table-active">
+              {% else %}
+            <tr>
+              {% endif %}
+              <td>
+                {% if estado.color %}
+                <div style="width:30px;height:30px;background-color:{{ estado.color }};border-radius:50%;"></div>
+                {% else %}
+                -
+                {% endif %}
+              </td>
+              <td>{{ estado.nombre }}</td>
+              <td>{{ estado.descripcion|default:'-' }}</td>
+              <td>
+                <a href="{% url 'gestionar_estados_editar' estado.id %}" class="btn btn-sm btn-warning">
+                  Editar
+                </a>
+                <button class="btn btn-sm btn-danger eliminar-estado" data-id="{{ estado.id }}">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+    </div>
   </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    console.log('SweetAlert2 disponible:', !!Swal);
+
+    // Manejar mensajes de Django
+    {% if messages %}
+    console.log('Hay mensajes de Django');
+    {% for message in messages %}
+    console.log('Mensaje:', '{{ message }}', 'Tipo:', '{{ message.tags }}');
+    Swal.fire({
+      icon: '{{ message.tags }}' === 'error' ? 'error' :
+        '{{ message.tags }}' === 'success' ? 'success' : 'info',
+      title: '{{ message.message|escapejs }}',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true
+    });
+    {% endfor %}
+    {% else %}
+    console.log('No hay mensajes de Django');
+    {% endif %}
+
+    // Formulario de crear/editar estado
+    const estadoForm = document.getElementById('estadoForm');
+    estadoForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Vas a guardar un estado',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, guardar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.submit();
+        }
+      });
+    });
+
+    // Botones de eliminar estado
+    const botonesEliminar = document.querySelectorAll('.eliminar-estado');
+    botonesEliminar.forEach(boton => {
+      boton.addEventListener('click', function () {
+        const estadoId = this.dataset.id;
+
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'No podrás revertir esta acción',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = `/estados/eliminar/${estadoId}/`;
+          }
+        });
+      });
+    });
+  });
+</script>
 {% endblock %}

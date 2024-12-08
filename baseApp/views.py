@@ -8,6 +8,8 @@ from django.urls import reverse
 
 from baseApp.forms import EstadoForm
 from baseApp.models import Estado
+from proyectoApp.forms import ProyectoForm
+from proyectoApp.models import Actividad, Documento, Proyecto
 
 
 # Vista principal
@@ -16,45 +18,62 @@ def inicio(request):
     return render(request, "index.html")
 
 
-# @permission_required("baseApp.add_estado", login_url="/")
-def crearEstado(request):
-    form = EstadoForm()  # Cambia esto de 'Estado()' a 'EstadoForm()'
-    data = {"titulo": "Crear Estado", "form": form, "ruta": "estados"}
+def gestionar_estados(request, estado_id=None):
+    # Si se proporciona un estado_id, estamos en modo edición
+    estado = get_object_or_404(Estado, id=estado_id) if estado_id else None
+
+    # Manejar la creación o edición de un estado
     if request.method == "POST":
-        form = EstadoForm(request.POST)  # Usa 'EstadoForm' también aquí
+        form = EstadoForm(request.POST, instance=estado)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Estado creado con éxito!!!")
-            return redirect('estados')  # Redirige al listado de estados después de guardar
-    return render(request, "base/estado/form.html", data)
+            try:
+                form.save()
+                messages.success(request, "Estado guardado exitosamente.")
+                return redirect("gestionar_estados")
+            except Exception as e:
+                messages.error(request, f"Error al guardar el estado: {str(e)}")
+    else:
+        form = EstadoForm(instance=estado)
 
+    # Obtener estados agrupados por modelo
+    estados_por_modelo = {
+        modelo: Estado.objects.filter(modelo=modelo)
+        for modelo, _ in Estado.MODELOS_CHOICES
+    }
 
-# @permission_required("baseApp.change_estado", login_url="/")
-def editarEstado(request, id):
-    item = Estado.objects.get(pk=id)
-    form = EstadoForm(instance=item)
-    if request.method == "POST":
-        form = EstadoForm(request.POST, instance=item)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Estado editado con éxito")
-            return redirect('estados')  # Redirige después de guardar para evitar reenvíos al refrescar
+    data = {
+        "form": form,
+        "estados_por_modelo": estados_por_modelo,
+        "estado_editando": estado,
+    }
 
-    data = {"titulo": "Editar Estado", "form": form, "ruta": "estados"}
-    return render(request, "base/estado/form.html", data)
-
-# @permission_required("baseApp.delete_estado", login_url="/")
-def eliminarEstado(request, id):
-    item = Estado.objects.get(pk=id)
-    item.delete()
-    return redirect("/proyecto/estados")
-
-
-# @permission_required("baseApp.view_estado", login_url="/")
-def listarEstado(request):
-    estados = Estado.objects.all()
-    paginator = Paginator(estados, 10)  # Show 10 states per page.
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    data = {"lista": page_obj}
     return render(request, "base/estado/list.html", data)
+
+
+def editar_estado(request, estado_id):
+    estado = get_object_or_404(Estado, id=estado_id)
+
+    if request.method == "POST":
+        form = EstadoForm(request.POST, instance=estado)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Estado actualizado exitosamente.")
+            return redirect("lista_estados")
+    else:
+        form = EstadoForm(instance=estado)
+
+    data = {"form": form, "estado": estado}
+
+    return render(request, "base/estado/form.html", data)
+
+
+def eliminar_estado(request, estado_id):
+    estado = get_object_or_404(Estado, id=estado_id)
+
+    try:
+        estado.delete()
+        messages.success(request, "Estado eliminado exitosamente.")
+    except Exception as e:
+        messages.error(request, f"No se puede eliminar el estado: {str(e)}")
+
+    return redirect("lista_estados")

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator, RegexValidator
 from baseApp.models import Estado
 
@@ -28,66 +29,108 @@ class Cliente(models.Model):
 
 
 class Proyecto(models.Model):
-    nombre_proyecto = models.CharField(max_length=50)
-    encargado_proyecto_pw = models.CharField(max_length=50)
-    encargado_proyecto_cl = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50)
+    encargado = models.CharField(max_length=50)
+    # encargado_proyecto_cl = models.CharField(max_length=50)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
-
-    fk_id_cliente = models.ForeignKey(
+    cliente = models.ForeignKey(
         Cliente, on_delete=models.CASCADE, related_name="proyectos"
     )
-    # estado = models.ForeignKey(
-    #     Estado, on_delete=models.PROTECT, limit_choices_to={"modelo": "Proyecto"}
-    # )
+    estado = models.ForeignKey(
+        Estado,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"modelo": "Proyecto"},
+        related_name="proyectos",
+    )
 
     def __str__(self):
-        return self.nombre_proyecto
+        return self.nombre
 
     class Meta:
         db_table = "proyecto"
         verbose_name_plural = "Proyectos"
 
+    def clean(self):
+        if self.fecha_inicio and self.fecha_fin:
+            if self.fecha_inicio > self.fecha_fin:
+                raise ValidationError(
+                    {
+                        "fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"
+                    }
+                )
+
 
 class Documento(models.Model):
     codigo = models.CharField(max_length=50, primary_key=True)
+    nombre = models.CharField(max_length=200)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="documentos"
+    )
     revision = models.CharField(max_length=100)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     link_drive = models.URLField(
         max_length=200, validators=[URLValidator()], null=True, blank=True
     )
-    fk_id_proyecto = models.ForeignKey(
-        Proyecto, on_delete=models.CASCADE, related_name="documentos"
+    estado = models.ForeignKey(
+        Estado,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"modelo": "Documento"},
+        related_name="documentos",
     )
-    # estado = models.ForeignKey(
-    #     Estado, on_delete=models.PROTECT, limit_choices_to={"modelo": "Documento"}
-    # )
 
     def __str__(self):
-        return self.revision
+        return self.codigo
 
     class Meta:
         db_table = "documento"
         verbose_name_plural = "Documentos"
 
+    def clean(self):
+        if self.fecha_inicio and self.fecha_fin:
+            if self.fecha_inicio > self.fecha_fin:
+                raise ValidationError(
+                    {
+                        "fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"
+                    }
+                )
+
 
 class Actividad(models.Model):
-    nombre_actividad = models.CharField(max_length=50)
-    descripcion = models.TextField()  # Cambié a TextField para descripción más larga
+    nombre = models.CharField(max_length=50)
+    documento = models.ForeignKey(
+        Documento, on_delete=models.CASCADE, related_name="actividades"
+    )
+    descripcion = models.TextField(max_length=200)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     duracion_estimada = models.DurationField(null=True, blank=True)
-    fk_id_codigo = models.ForeignKey(
-        Documento, on_delete=models.CASCADE, related_name="actividades"
+    estado = models.ForeignKey(
+        Estado,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"modelo": "Actividad"},
+        related_name="actividades",
     )
-    # estado = models.ForeignKey(
-    #     Estado, on_delete=models.PROTECT, limit_choices_to={"modelo": "Actividad"}
-    # )
 
     def __str__(self):
-        return self.nombre_actividad
+        return self.nombre
 
     class Meta:
         db_table = "actividad"
         verbose_name_plural = "Actividades"
+
+    def clean(self):
+        if self.fecha_inicio and self.fecha_fin:
+            if self.fecha_inicio > self.fecha_fin:
+                raise ValidationError(
+                    {
+                        "fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"
+                    }
+                )

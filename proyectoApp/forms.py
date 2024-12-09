@@ -1,5 +1,9 @@
 from django import forms
-from .models import Cliente, Proyecto, Documento, Actividad
+from django.core.exceptions import ValidationError
+
+from baseApp.models import Estado
+from proyectoApp.models import Cliente, Proyecto, Documento, Actividad
+
 
 # Cliente
 class ClienteForm(forms.ModelForm):
@@ -14,27 +18,53 @@ class ClienteForm(forms.ModelForm):
         }
 
 
-# ----- Proyecto -----
+# Proyecto
 
 
 class ProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
         fields = [
-            "nombre_proyecto",
-            "encargado_proyecto_pw",
-            "encargado_proyecto_cl",
-            "fk_id_cliente",
+            "nombre",
+            "encargado",
+            "fecha_inicio",
+            "fecha_fin",
+            "cliente",
+            "estado",
         ]
         widgets = {
-            "nombre_proyecto": forms.TextInput(attrs={"class": "form-control"}),
-            "encargado_proyecto_pw": forms.TextInput(attrs={"class": "form-control"}),
-            "encargado_proyecto_cl": forms.TextInput(attrs={"class": "form-control"}),
-            "fk_id_cliente": forms.Select(attrs={"class": "form-select"}),
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "encargado": forms.TextInput(attrs={"class": "form-control"}),
+            # "encargado_proyecto_cl": forms.TextInput(attrs={"class": "form-control"}),
+            "fecha_inicio": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            "fecha_fin": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            "cliente": forms.Select(attrs={"class": "form-select"}),
+            "estado": forms.Select(attrs={"class": "form-select"}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_inicio = cleaned_data.get("fecha_inicio")
+        fecha_fin = cleaned_data.get("fecha_fin")
 
-# ----- Documento -----
+        if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
+            raise forms.ValidationError(
+                {"fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"}
+            )
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limitar estados solo a Proyecto
+        self.fields["estado"].queryset = Estado.get_estados_por_modelo("Proyecto")
+
+
+# Documento
 
 
 class DocumentoForm(forms.ModelForm):
@@ -42,35 +72,103 @@ class DocumentoForm(forms.ModelForm):
         model = Documento
         fields = [
             "codigo",
+            "nombre",
+            "proyecto",
             "revision",
             "fecha_inicio",
             "fecha_fin",
             "link_drive",
-            "fk_id_proyecto",
+            "estado",
         ]
         widgets = {
             "codigo": forms.TextInput(attrs={"class": "form-control"}),
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "proyecto": forms.Select(attrs={"class": "form-select"}),
             "revision": forms.TextInput(attrs={"class": "form-control"}),
-            "fecha_inicio": forms.TextInput(
+            "fecha_inicio": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),
-            "fecha_fin": forms.TextInput(
+            "fecha_fin": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),
-            "link_drive": forms.TextInput(attrs={"class": "form-control"}),
-            "fk_id_proyecto": forms.Select(attrs={"class": "form-select"}),
+            "link_drive": forms.URLInput(attrs={"class": "form-control"}),
+            "estado": forms.Select(attrs={"class": "form-select"}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_inicio = cleaned_data.get("fecha_inicio")
+        fecha_fin = cleaned_data.get("fecha_fin")
 
-# ----- Actividad -----
+        if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
+            raise forms.ValidationError(
+                {"fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"}
+            )
+
+        return cleaned_data
+
+    def clean_link_drive(self):
+        link = self.cleaned_data.get("link_drive")
+        if link:
+            # Validaciones adicionales si es necesario
+            if not link.startswith(
+                ("https://drive.google.com", "http://drive.google.com")
+            ):
+                raise forms.ValidationError(
+                    "Por favor, ingrese un enlace de Google Drive válido"
+                )
+        return link
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limitar estados solo a Documento
+        self.fields["estado"].queryset = Estado.get_estados_por_modelo("Documento")
+
+
+# Actividad
 
 
 class ActividadForm(forms.ModelForm):
     class Meta:
         model = Actividad
-        fields = ["nombre_actividad", "descripcion", "fk_id_codigo"]
+        fields = [
+            "nombre",
+            "documento",
+            "descripcion",
+            "fecha_inicio",
+            "fecha_fin",
+            "duracion_estimada",
+            "estado",
+        ]  # Quita el tilde
         widgets = {
-            "nombre_documento": forms.TextInput(attrs={"class": "form-control"}),
-            "revision": forms.TextInput(attrs={"class": "form-control"}),
-            "fk_id_codigo": forms.Select(attrs={"class": "form-select"}),
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "documento": forms.Select(attrs={"class": "form-select"}),
+            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
+            "fecha_inicio": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            "fecha_fin": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            "duracion_estimada": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),  # Sin tilde
+            "estado": forms.Select(attrs={"class": "form-select"}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_inicio = cleaned_data.get("fecha_inicio")
+        fecha_fin = cleaned_data.get("fecha_fin")
+
+        if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
+            raise forms.ValidationError(
+                {"fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"}
+            )
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limitar estados solo a Actividad
+        self.fields["estado"].queryset = Estado.get_estados_por_modelo("Actividad")

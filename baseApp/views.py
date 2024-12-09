@@ -8,8 +8,6 @@ from django.urls import reverse
 
 from baseApp.forms import EstadoForm
 from baseApp.models import Estado
-from proyectoApp.forms import ProyectoForm
-from proyectoApp.models import Actividad, Documento, Proyecto
 
 
 # Vista principal
@@ -58,7 +56,7 @@ def editar_estado(request, estado_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Estado actualizado exitosamente.")
-            return redirect("lista_estados")
+            return redirect("gestionar_estados")
     else:
         form = EstadoForm(instance=estado)
 
@@ -76,4 +74,4 @@ def eliminar_estado(request, estado_id):
     except Exception as e:
         messages.error(request, f"No se puede eliminar el estado: {str(e)}")
 
-    return redirect("lista_estados")
+    return redirect("gestionar_estados")

@@ -1,6 +1,6 @@
 from django import forms
+
 from baseApp.models import Estado
-from proyectoApp.models import Actividad, Documento, Proyecto
 
 
 class EstadoForm(forms.ModelForm):

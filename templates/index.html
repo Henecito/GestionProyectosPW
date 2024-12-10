@@ -69,13 +69,14 @@
                         {% endif %}
                     </ul>
                 </div>
+                {% endif %}
 
                 {% if perms.baseApp.view_estado %}
                 <a href="{% url 'gestionar_estados' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Estados
                 </a>
                 {% endif %}
-
+                
                 <div class="dropdown">
                     <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-project-diagram"></i> Personas

@@ -26,24 +26,36 @@
             </div>
             <div class="list-group">
                 {% if user.is_authenticated %}
-                <!-- Gerente de recursos -->
-                <!-- Gerente -->
                 {% if user.is_superuser %}
+
                 <a href="{% url 'resumen' %}" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>
-                <a href="{% url 'proyecto-list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Proyecto crispy
-                </a>
-                <a href="{% url 'documento-list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Documento crispy
-                </a>
-                <a href="{% url 'actividad-list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Actividad crispy
-                </a>
-                <a href="{% url 'cliente_list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Nuevo cliente
-                </a>
+
+                <div class="dropdown">
+                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-project-diagram"></i> Proyecto
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'proyecto-list' %}" class="dropdown-item">
+                                <i class="fas fa-folder"></i> Proyectos
+                            </a>
+                        </li>
+                        <li><a href="{% url 'actividad-list' %}" class="dropdown-item">
+                                <i class="fas fa-tasks"></i> Actividades
+                            </a>
+                        </li>
+                        <li><a href="{% url 'cliente_list' %}" class="dropdown-item">
+                                <i class="fas fa-user-friends"></i> Clientes
+                            </a>
+                        </li>
+                        <li><a href="{% url 'documento-list' %}" class="dropdown-item">
+                                <i class="fas fa-file-alt"></i> Documentos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
                 <a href="/admin/" class="list-group-item">
                     <i class="fas fa-cogs"></i> Admin
                 </a>
@@ -56,30 +68,30 @@
                         <i class="fas fa-project-diagram"></i> Personas
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'cliente_list' %}" class="list-group-item">
-                                <i class="fas fa-plus-circle"></i> Clientes
+                        <li><a href="{% url 'cliente_list' %}" class="dropdown-item">
+                                <i class="fas fa-user-friends"></i> Clientes
                             </a>
                         </li>
-                        <li><a href="{% url 'empleado_list' %}" class="list-group-item">
-                                <i class="fas fa-plus-circle"></i> Empleados
+                        <li><a href="{% url 'empleado_list' %}" class="dropdown-item">
+                                <i class="fas fa-users"></i> Empleados
                             </a>
                         </li>
-                        <li><a href="{% url 'lista_usuarios' %}" class="list-group-item">
-                                <i class="fas fa-plus-circle"></i> Usuarios
+                        <li><a href="{% url 'lista_usuarios' %}" class="dropdown-item">
+                                <i class="fas fa-user"></i> Usuarios
                             </a></li>
-                        <li><a href="{% url 'asignar_usuarios' %}" class="list-group-item">
-                                <i class="fas fa-plus-circle"></i> Grupos
+                        <li><a href="{% url 'asignar_usuarios' %}" class="dropdown-item">
+                                <i class="fas fa-user-cog"></i> Grupos
                             </a></li>
-                        <li><a href="{% url 'area_list' %}" class="list-group-item">
-                                <i class="fas fa-plus-circle"></i> Area
+                        <li><a href="{% url 'area_list' %}" class="dropdown-item">
+                                <i class="fas fa-building"></i> Área
                             </a></li>
-                        <li><a href="{% url 'subarea_list' %}" class="list-group-item">
-                                <i class="fas fa-plus-circle"></i> Sub-Area
+                        <li><a href="{% url 'subarea_list' %}" class="dropdown-item">
+                                <i class="fas fa-sitemap"></i> Sub-Área
                             </a></li>
                     </ul>
                 </div>
-                {% endif %}
 
+                {% endif %}
                 {% else %}
                 <a href="{% url 'login' %}" class="list-group-item">
                     <i class="fas fa-sign-in-alt"></i> Iniciar sesión
@@ -130,22 +142,6 @@
         </button>
 
         <div id="page-content-wrapper">
-            <!-- Sección de Notificaciones (lo que agregamos de nuevo) -->
-            <!-- <div class="d-flex justify-content-end">
-                <div class="dropdown">
-                    <button class="btn navbar-notification dropdown-toggle" type="button" id="notificationsDropdown"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bell"></i> <span class="badge bg-danger">3</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
-                        <li><a class="dropdown-item" href="#">Nueva tarea asignada</a></li>
-                        <li><a class="dropdown-item" href="#">Proyecto completado</a></li>
-                        <li><a class="dropdown-item" href="#">Nuevo mensaje</a></li>
-                        <li><a class="dropdown-item text-center" href="#">Ver todas las notificaciones</a></li>
-                    </ul>
-                </div>
-            </div> -->
-
             <main class="mx-1"> <!-- Este es el lugar donde se renderizará el contenido de cada vista -->
                 {% block content %}
                 <!-- El contenido de la página (debe ser definido en las plantillas que extiendan este archivo) -->

@@ -11,7 +11,7 @@ class Cliente(models.Model):
     )
 
     telefono_validator = RegexValidator(
-        regex=r"^(\+?56)?(\s?)(0?9)(\s?)[9876543]\d{7}$",
+        regex=r"^(\+?56)?(\s?)(0?9)(\s?)[98765432]\d{7}$",
         message="Ingrese un número de teléfono válido",
     )
 
@@ -114,11 +114,11 @@ class Documento(models.Model):
 
 
 class Actividad(models.Model):
-    nombre = models.CharField(max_length=50)
+    # nombre = models.CharField(max_length=50)
+    descripcion = models.TextField(max_length=200)
     documento = models.ForeignKey(
         Documento, on_delete=models.CASCADE, related_name="actividades"
     )
-    descripcion = models.TextField(max_length=200)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     duracion_estimada = models.DurationField(null=True, blank=True)

@@ -1,6 +1,5 @@
 from django.urls import path
-from . import views
-from .views import AsignarUsuariosAGrupoView 
+from usuarioApp import views
 
 urlpatterns = [
     # Urls para Área
@@ -39,5 +38,5 @@ urlpatterns = [
     ),
     path('usuarios/', views.UserListView.as_view(), name='lista_usuarios'),
     path('usuarios/perfil/cambiar-contrasena/', views.PasswordChangeView.as_view(), name='password_change'),
-    path('usuarios/grupos/asignar_usuarios/', AsignarUsuariosAGrupoView.as_view(), name='asignar_usuarios'),
+    path('usuarios/grupos/asignar_usuarios/', views.AsignarUsuariosAGrupoView.as_view(), name='asignar_usuarios'),
 ]

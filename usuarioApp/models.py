@@ -22,7 +22,7 @@ class Area(models.Model):
 
 class SubArea(models.Model):
     nombre = models.CharField(max_length=50)
-    fk_id_area = models.ForeignKey(
+    area = models.ForeignKey(
         Area, on_delete=models.CASCADE, related_name="subareas"
     )
 
@@ -41,7 +41,7 @@ class Empleado(models.Model):
     )
 
     telefono_validator = RegexValidator(
-        regex=r"^(\+?56)?(\s?)(0?9)(\s?)[9876543]\d{7}$",
+        regex=r"^(\+?56)?(\s?)(0?9)(\s?)[98765432]\d{7}$",
         message="Ingrese un número de teléfono válido",
     )
 
@@ -66,7 +66,7 @@ class Empleado(models.Model):
     # fk_id_estado = models.ForeignKey(
     #     Estado, on_delete=models.CASCADE, related_name="empleados"
     # )
-    fk_id_subarea = models.ForeignKey(
+    subarea = models.ForeignKey(
         SubArea, null=True, on_delete=models.CASCADE, related_name="empleados"
     )
     user = models.OneToOneField(
@@ -107,17 +107,17 @@ def crear_usuario_empleado(sender, instance, created, **kwargs):
 
 
 class Asignar(models.Model):
-    fk_rut_empleado = models.ForeignKey(
+    empleado = models.ForeignKey(
         Empleado, on_delete=models.CASCADE, related_name="asignaciones"
     )
-    fk_id_actividad = models.ForeignKey(
+    actividad = models.ForeignKey(
         Actividad, on_delete=models.CASCADE, related_name="asignaciones"
     )
     fecha_asignacion = models.DateTimeField(auto_now_add=True)
     # Puedes añadir campos adicionales como estado, comentarios, etc.
 
     class Meta:
-        unique_together = ["fk_rut_empleado", "fk_id_actividad"]
+        unique_together = ["empleado", "actividad"]
         verbose_name_plural = "Asignaciones"
 
     def __str__(self):

@@ -142,7 +142,7 @@ class DocumentoForm(forms.ModelForm):
     def clean_link_drive(self):
         link = self.cleaned_data.get("link_drive")
         if link:
-            # Validaciones adicionales si es necesario
+            # Validaciones adicionales
             if not link.startswith(
                 ("https://drive.google.com", "http://drive.google.com")
             ):
@@ -180,18 +180,18 @@ class ActividadForm(forms.ModelForm):
     class Meta:
         model = Actividad
         fields = [
-            "nombre",
-            "documento",
+            # "nombre",
             "descripcion",
+            "documento",
             "fecha_inicio",
             "fecha_fin",
             "duracion_estimada",
             "estado",
         ]
         widgets = {
-            "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "documento": forms.Select(attrs={"class": "form-select"}),
+            # "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "descripcion": forms.TextInput(attrs={"class": "form-control"}),
+            "documento": forms.Select(attrs={"class": "form-select"}),
             "fecha_inicio": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),
@@ -200,7 +200,7 @@ class ActividadForm(forms.ModelForm):
             ),
             "duracion_estimada": forms.TextInput(
                 attrs={"class": "form-control"}
-            ),  # Sin tilde
+            ),
             "estado": forms.Select(attrs={"class": "form-select"}),
         }
 

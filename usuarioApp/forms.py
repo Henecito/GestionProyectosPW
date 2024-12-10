@@ -1,8 +1,9 @@
 from django import forms
-from django.core.validators import RegexValidator
 from django.contrib.auth.models import User, Group
-from .models import Area, SubArea, Empleado, Asignar
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+from usuarioApp.models import Area, SubArea, Empleado, Asignar
 
 
 class AreaForm(forms.ModelForm):
@@ -16,17 +17,11 @@ class AreaForm(forms.ModelForm):
 class SubAreaForm(forms.ModelForm):
     class Meta:
         model = SubArea
-        fields = ["nombre", "fk_id_area"]
+        fields = ["nombre", "area"]
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "fk_id_area": forms.Select(attrs={"class": "form-select"}),
+            "area": forms.Select(attrs={"class": "form-select"}),
         }
-
-
-from django import forms
-from django.contrib.auth.models import User  
-from .models import Empleado
-from django.core.exceptions import ValidationError
 
 class EmpleadoForm(forms.ModelForm):
     # Validador de RUT chileno
@@ -53,8 +48,12 @@ class EmpleadoForm(forms.ModelForm):
         widget=forms.NumberInput(
             attrs={"placeholder": "Ej: 912345678", "class": "form-control"}
         ),
-        min_value=900000000,
-        max_value=999999999,
+    )
+
+    contacto_emergencia = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={"placeholder": "Ej: 912345678", "class": "form-control"}
+        ),
     )
 
     # Widget para email con validación
@@ -79,7 +78,7 @@ class EmpleadoForm(forms.ModelForm):
             "carrera",
             "telefono",
             "contacto_emergencia",
-            "fk_id_subarea",
+            "subarea",
         ]
 
         widgets = {
@@ -90,8 +89,7 @@ class EmpleadoForm(forms.ModelForm):
             "afp": forms.TextInput(attrs={"class": "form-control"}),
             "plan_salud": forms.TextInput(attrs={"class": "form-control"}),
             "carrera": forms.TextInput(attrs={"class": "form-control"}),
-            "contacto_emergencia": forms.TextInput(attrs={"class": "form-control"}),
-            "fk_id_subarea": forms.Select(attrs={"class": "form-selectl"})
+            "subarea": forms.Select(attrs={"class": "form-selectl"})
         }
 
     # Sobrescribir el método save para crear el Usuario
@@ -171,10 +169,10 @@ class EmpleadoForm(forms.ModelForm):
 class AsignarForm(forms.ModelForm):
     class Meta:
         model = Asignar
-        fields = ["fk_rut_empleado", "fk_id_actividad"]
+        fields = ["empleado", "actividad"]
         widgets = {
-            "fk_rut_empleado": forms.Select(attrs={"class": "form-select"}),
-            "fk_id_actividad": forms.Select(attrs={"class": "form-select"}),
+            "empleado": forms.Select(attrs={"class": "form-select"}),
+            "actividad": forms.Select(attrs={"class": "form-select"}),
         }
 
 #Password

@@ -1,3 +1,11 @@
+
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -5,21 +13,11 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     DetailView,
+    View,
 )
 
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.views.generic import ListView, View
-from django.contrib.auth.views import PasswordChangeView
-
-from .models import Area, SubArea, Empleado, Asignar
-from .forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom, AsignarUsuariosAGrupoForm
-
-from django.contrib.auth import update_session_auth_hash
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-
+from usuarioApp.models import Area, SubArea, Empleado, Asignar
+from usuarioApp.forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom, AsignarUsuariosAGrupoForm
 
 # Vista para Área
 class AreaListView(LoginRequiredMixin, ListView):

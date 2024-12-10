@@ -102,6 +102,11 @@
                                 <i class="fas fa-user-cog"></i> Grupos
                             </a>
                         </li>
+                        <li>
+                            <a href="{% url 'manage_groups' %}" class="dropdown-item">
+                                <i class="fas fa-user-cog"></i> Permisos
+                            </a>
+                        </li>
                         <!-- end if -->
                         {% if perms.proyectoApp.view_cliente %}
                         <li>

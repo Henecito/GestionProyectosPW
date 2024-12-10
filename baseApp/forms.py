@@ -1,8 +1,7 @@
 from django import forms
-
 from baseApp.models import Estado
 
-
+# Estado
 class EstadoForm(forms.ModelForm):
     class Meta:
         model = Estado
@@ -15,3 +14,4 @@ class EstadoForm(forms.ModelForm):
                 attrs={"type": "color", "class": "form-control form-control-color"}
             ),
         }
+

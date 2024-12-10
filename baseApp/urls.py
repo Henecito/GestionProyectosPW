@@ -17,4 +17,6 @@ urlpatterns = [
         views.eliminar_estado,
         name="eliminar_estado",
     ),
+    # Grupos y permisos
+    path("permisos/", views.manage_groups, name="manage_groups"),
 ]

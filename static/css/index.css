@@ -204,3 +204,10 @@ button:hover {
   background-color: #e74a1f;  
   color: black !important;  
 }
+
+.scrollable-navbar {
+  height: 100vh; /* Altura fija para la barra de navegación */
+  overflow-y: auto; /* Habilita el desplazamiento vertical */
+  background-color: #343a40; /* Color de fondo para la barra de navegación */
+  color: white; /* Color del texto */
+}

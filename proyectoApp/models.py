@@ -61,6 +61,12 @@ class Proyecto(models.Model):
                         "fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"
                     }
                 )
+            
+    def get_fecha_inicio_formatted(self):
+        return self.fecha_inicio.strftime('%d/%m/%Y') if self.fecha_inicio else ''
+
+    def get_fecha_fin_formatted(self):
+        return self.fecha_fin.strftime('%d/%m/%Y') if self.fecha_fin else ''
 
 
 class Documento(models.Model):
@@ -99,6 +105,12 @@ class Documento(models.Model):
                         "fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"
                     }
                 )
+            
+    def get_fecha_inicio_formatted(self):
+        return self.fecha_inicio.strftime('%d/%m/%Y') if self.fecha_inicio else ''
+
+    def get_fecha_fin_formatted(self):
+        return self.fecha_fin.strftime('%d/%m/%Y') if self.fecha_fin else ''
 
 
 class Actividad(models.Model):
@@ -134,3 +146,9 @@ class Actividad(models.Model):
                         "fecha_fin": "La fecha de fin debe ser posterior a la fecha de inicio"
                     }
                 )
+            
+    def get_fecha_inicio_formatted(self):
+        return self.fecha_inicio.strftime('%d/%m/%Y') if self.fecha_inicio else ''
+
+    def get_fecha_fin_formatted(self):
+        return self.fecha_fin.strftime('%d/%m/%Y') if self.fecha_fin else ''

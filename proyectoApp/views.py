@@ -15,8 +15,27 @@ from django.contrib.auth.decorators import login_required, permission_required
 from usuarioApp.models import Empleado
 
 
+# Resumen
+@permission_required("proyectoApp.view_dashboard", login_url="/")
+def resumenDashboard(request):
+    # Conteo de los objetos que necesitas
+    total_proyectos = Proyecto.objects.count()  # Conteo de proyectos
+    total_clientes = Cliente.objects.count()  # Conteo de clientes
+    total_empleados = Empleado.objects.count()  # Conteo de empleados
+
+    # Pasa estos datos al template
+    context = {
+        "total_proyectos": total_proyectos,
+        "total_clientes": total_clientes,
+        "total_empleados": total_empleados,
+        "labels": ["Proyectos", "Clientes", "Empleados"],
+        "data": [total_proyectos, total_clientes, total_empleados],
+    }
+
+    return render(request, "dashboard/resumen.html", context)
+
+
 # Cliente
-# Vista para Cliente
 class ClienteListView(LoginRequiredMixin, ListView):
     model = Cliente
     template_name = "proyecto/clientes/cliente_list.html"
@@ -55,7 +74,8 @@ class ClienteDeleteView(LoginRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-# ----- Proyecto -----
+# Proyecto
+
 
 @permission_required("proyectoApp.add_proyecto", login_url="/")
 def crearProyecto(request):
@@ -64,17 +84,15 @@ def crearProyecto(request):
         if form.is_valid():
             form.save()
             messages.success(request, "¡Proyecto creado con éxito!")
-            return redirect("proyectos")  # Redirigir a la página de proyectos después de guardar
+            return redirect(
+                "proyectos"
+            )  # Redirigir a la página de proyectos después de guardar
         else:
             messages.error(request, "Hubo un error al crear el proyecto.")
     else:
         form = ProyectoForm()  # Cuando es un GET, crea un formulario vacío
 
-    data = {
-        "titulo": "Crear Proyecto",
-        "formulario": form,
-        "ruta": "proyectos"
-    }
+    data = {"titulo": "Crear Proyecto", "formulario": form, "ruta": "proyectos"}
 
     return render(request, "proyecto/proyecto/createProyecto.html", data)
 
@@ -105,13 +123,15 @@ def eliminarProyecto(request, id):
     item.delete()
     return redirect("proyecto/proyecto/proyectos")
 
+
 def documento(request, id):
     item = Proyecto.objects.get(pk=id)
     item.delete()
     return redirect("proyecto/documentos/documento")
 
 
-# ----- Documento -----
+# Documento
+
 
 # @permission_required("proyectoApp.add_documento", login_url="/")
 def crearDocumento(request):
@@ -125,11 +145,13 @@ def crearDocumento(request):
             return redirect("documento_list")
     return render(request, "proyecto/documentos/createDocumento.html", data)
 
+
 # @permission_required("proyectoApp.view_documento", login_url="/")
 def listarDocumento(request):
     documentos = Documento.objects.all()
     data = {"lista": documentos}
     return render(request, "proyecto/documentos/documento.html", data)
+
 
 # @permission_required("proyectoApp.change_documento", login_url="/")
 def actualizarDocumento(request, codigo):
@@ -144,6 +166,7 @@ def actualizarDocumento(request, codigo):
     data = {"titulo": "Editar Documento", "formulario": form, "ruta": "documentos"}
     return render(request, "proyecto/documentos/createDocumento.html", data)
 
+
 # @permission_required("proyectoApp.delete_documento", login_url="/")
 def eliminarDocumento(request, id):
     item = Documento.objects.get(pk=id)
@@ -152,8 +175,8 @@ def eliminarDocumento(request, id):
     return redirect("documento_list")
 
 
+# Actividad
 
-# ----- Actividad -----
 
 @permission_required("proyectoApp.add_actividad", login_url="/")
 def crearActividad(request):
@@ -167,11 +190,13 @@ def crearActividad(request):
             return redirect("actividad_list")
     return render(request, "proyecto/actividad/createActivity.html", data)
 
+
 @permission_required("proyectoApp.view_actividad", login_url="/")
 def listarActividad(request):
     actividades = Actividad.objects.all()
     data = {"lista": actividades}
     return render(request, "proyecto/actividad/actividad.html", data)
+
 
 @permission_required("proyectoApp.change_actividad", login_url="/")
 def actualizarActividad(request, id):
@@ -186,6 +211,7 @@ def actualizarActividad(request, id):
     data = {"titulo": "Editar Actividad", "formulario": form, "ruta": "actividades"}
     return render(request, "proyecto/actividad/createActivity.html", data)
 
+
 @permission_required("proyectoApp.delete_actividad", login_url="/")
 def eliminarActividad(request, id):
     item = Actividad.objects.get(pk=id)
@@ -194,22 +220,125 @@ def eliminarActividad(request, id):
     return redirect("actividad_list")
 
 
-# ----- Resumen -----
+# Usando crispy forms
+# Vistas para Proyecto
+class ProyectoListView(ListView):
+    model = Proyecto
+    template_name = "proyecto/proyecto/list.html"
+    context_object_name = "proyectos"
 
-@permission_required("proyectoApp.view_dashboard", login_url="/")
-def resumenDashboard(request):
-    # Conteo de los objetos que necesitas
-    total_proyectos = Proyecto.objects.count()  # Conteo de proyectos
-    total_clientes = Cliente.objects.count()    # Conteo de clientes
-    total_empleados = Empleado.objects.count()  # Conteo de empleados
-    
-    # Pasa estos datos al template
-    context = {
-        'total_proyectos': total_proyectos,
-        'total_clientes': total_clientes,
-        'total_empleados': total_empleados,
-        'labels': ['Proyectos', 'Clientes', 'Empleados'],
-        'data': [total_proyectos, total_clientes, total_empleados],
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["proyecto"] = self.model
+        context["proyecto_verbose_name"] = self.model._meta.verbose_name
+        context["proyecto_verbose_name_plural"] = self.model._meta.verbose_name_plural
 
-    return render(request, 'dashboard/resumen.html', context)
+        # Campos a mostrar (excluyendo id y password)
+        visible_fields = [
+            f for f in self.model._meta.fields if f.name not in ["id", "password"]
+        ]
+        context["proyecto_fields"] = visible_fields
+
+        return context
+
+
+class ProyectoCreateView(CreateView):
+    model = Proyecto
+    form_class = ProyectoForm
+    template_name = "proyecto/proyecto/form.html"
+    success_url = reverse_lazy("proyecto-list")
+
+
+class ProyectoUpdateView(UpdateView):
+    model = Proyecto
+    form_class = ProyectoForm
+    template_name = "proyecto/proyecto/form.html"
+    success_url = reverse_lazy("proyecto-list")
+
+
+class ProyectoDeleteView(DeleteView):
+    model = Proyecto
+    template_name = "proyecto/proyecto/delete.html"
+    success_url = reverse_lazy("proyecto-list")
+
+
+# Vistas para Documento
+class DocumentoListView(ListView):
+    model = Documento
+    template_name = "proyecto/documentos/list.html"
+    context_object_name = "documentos"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["documento"] = self.model
+        context["documento_verbose_name"] = self.model._meta.verbose_name
+        context["documento_verbose_name_plural"] = self.model._meta.verbose_name_plural
+
+        # Campos a mostrar (excluyendo id y password)
+        visible_fields = [
+            f for f in self.model._meta.fields if f.name not in ["id", "password"]
+        ]
+        context["documento_fields"] = visible_fields
+
+        return context
+
+
+class DocumentoCreateView(CreateView):
+    model = Documento
+    form_class = DocumentoForm
+    template_name = "proyecto/documentos/form.html"
+    success_url = reverse_lazy("documento-list")
+
+
+class DocumentoUpdateView(UpdateView):
+    model = Documento
+    form_class = DocumentoForm
+    template_name = "proyecto/documentos/form.html"
+    success_url = reverse_lazy("documento-list")
+
+
+class DocumentoDeleteView(DeleteView):
+    model = Documento
+    template_name = "proyecto/documentos/delete.html"
+    success_url = reverse_lazy("documento-list")
+
+
+# Vistas para Actividad
+class ActividadListView(ListView):
+    model = Actividad
+    template_name = "proyecto/actividad/list.html"
+    context_object_name = "actividades"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["actividad"] = self.model
+        context["actividad_verbose_name"] = self.model._meta.verbose_name
+        context["actividad_verbose_name_plural"] = self.model._meta.verbose_name_plural
+
+        # Campos a mostrar (excluyendo id y password)
+        visible_fields = [
+            f for f in self.model._meta.fields if f.name not in ["id", "password"]
+        ]
+        context["actividad_fields"] = visible_fields
+
+        return context
+
+
+class ActividadCreateView(CreateView):
+    model = Actividad
+    form_class = ActividadForm
+    template_name = "proyecto/actividad/form.html"
+    success_url = reverse_lazy("actividad-list")
+
+
+class ActividadUpdateView(UpdateView):
+    model = Actividad
+    form_class = ActividadForm
+    template_name = "proyecto/actividad/form.html"
+    success_url = reverse_lazy("actividad-list")
+
+
+class ActividadDeleteView(DeleteView):
+    model = Actividad
+    template_name = "proyecto/actividad/delete.html"
+    success_url = reverse_lazy("actividad-list")

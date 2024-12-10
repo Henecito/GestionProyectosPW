@@ -22,6 +22,22 @@ class ClienteForm(forms.ModelForm):
 
 
 class ProyectoForm(forms.ModelForm):
+    fecha_inicio = forms.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],  # Formatos aceptados
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'},
+            format='%Y-%m-%d'
+        )
+    )
+    fecha_fin = forms.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'},
+            format='%Y-%m-%d'
+        ),
+        required=False  # Si el campo puede estar vacío
+    )
+    
     class Meta:
         model = Proyecto
         fields = [
@@ -68,6 +84,22 @@ class ProyectoForm(forms.ModelForm):
 
 
 class DocumentoForm(forms.ModelForm):
+    fecha_inicio = forms.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],  # Formatos aceptados
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'},
+            format='%Y-%m-%d'
+        )
+    )
+    fecha_fin = forms.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'},
+            format='%Y-%m-%d'
+        ),
+        required=False  # Si el campo puede estar vacío
+    )
+
     class Meta:
         model = Documento
         fields = [
@@ -129,6 +161,22 @@ class DocumentoForm(forms.ModelForm):
 
 
 class ActividadForm(forms.ModelForm):
+    fecha_inicio = forms.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],  # Formatos aceptados
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'},
+            format='%Y-%m-%d'
+        )
+    )
+    fecha_fin = forms.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'},
+            format='%Y-%m-%d'
+        ),
+        required=False  # Si el campo puede estar vacío
+    )
+
     class Meta:
         model = Actividad
         fields = [
@@ -139,7 +187,7 @@ class ActividadForm(forms.ModelForm):
             "fecha_fin",
             "duracion_estimada",
             "estado",
-        ]  # Quita el tilde
+        ]
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "documento": forms.Select(attrs={"class": "form-select"}),

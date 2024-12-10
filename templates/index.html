@@ -13,11 +13,12 @@
         rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     {% block extra_css %}{% endblock %}
+    {% block extrahead %}{% endblock %}
 </head>
 
 <body>
     <div id="wrapper">
-        <nav id="sidebar">
+        <nav id="sidebar" class="scrollable-navbar">
             <div class="sidebar-heading">
                 <a href="#" style="color: white; text-decoration: none;">
                     <i class="fas fa-cubes"></i> PW Ingeniería
@@ -31,56 +32,52 @@
                 <a href="{% url 'resumen' %}" class="list-group-item">
                     <i class="fas fa-tachometer-alt"></i> Resumen
                 </a>
-                <a href="{% url 'proyectos' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Nuevo proyecto
+                <a href="{% url 'proyecto-list' %}" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Proyecto crispy
+                </a>
+                <a href="{% url 'documento-list' %}" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Documento crispy
+                </a>
+                <a href="{% url 'actividad-list' %}" class="list-group-item">
+                    <i class="fas fa-plus-circle"></i> Actividad crispy
                 </a>
                 <a href="{% url 'cliente_list' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Nuevo cliente
                 </a>
-                <div class="dropdown">
-                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-project-diagram"></i> Proyectos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'proyectos' %}">Ver todos los proyectos</a>
-                        </li>
-                        <li><a class="dropdown-item" href="#">Proyectos completados</a></li>
-                        <li><a class="dropdown-item" href="#">Proyectos en curso</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-project-diagram"></i> Clientes
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'cliente_list' %}">Ver todos los clientes</a>
-                        </li>
-                    </ul>
-                </div>
-                {% endif %}
-                <!-- Admin -->
-                {% if user.is_superuser %}
                 <a href="/admin/" class="list-group-item">
                     <i class="fas fa-cogs"></i> Admin
                 </a>
                 <a href="{% url 'gestionar_estados' %}" class="list-group-item">
                     <i class="fas fa-plus-circle"></i> Estados
                 </a>
-                <a href="{% url 'empleado_list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Empleados
-                </a>
-                <a href="{% url 'lista_usuarios' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Usuarios
-                </a>
-                <a href="{% url 'asignar_usuarios' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Grupos
-                </a>
-                <a href="{% url 'area_list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Area
-                </a>
-                <a href="{% url 'subarea_list' %}" class="list-group-item">
-                    <i class="fas fa-plus-circle"></i> Sub-Area
-                </a>
+
+                <div class="dropdown">
+                    <a href="#" class="list-group-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-project-diagram"></i> Personas
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'cliente_list' %}" class="list-group-item">
+                                <i class="fas fa-plus-circle"></i> Clientes
+                            </a>
+                        </li>
+                        <li><a href="{% url 'empleado_list' %}" class="list-group-item">
+                                <i class="fas fa-plus-circle"></i> Empleados
+                            </a>
+                        </li>
+                        <li><a href="{% url 'lista_usuarios' %}" class="list-group-item">
+                                <i class="fas fa-plus-circle"></i> Usuarios
+                            </a></li>
+                        <li><a href="{% url 'asignar_usuarios' %}" class="list-group-item">
+                                <i class="fas fa-plus-circle"></i> Grupos
+                            </a></li>
+                        <li><a href="{% url 'area_list' %}" class="list-group-item">
+                                <i class="fas fa-plus-circle"></i> Area
+                            </a></li>
+                        <li><a href="{% url 'subarea_list' %}" class="list-group-item">
+                                <i class="fas fa-plus-circle"></i> Sub-Area
+                            </a></li>
+                    </ul>
+                </div>
                 {% endif %}
 
                 {% else %}
@@ -161,16 +158,14 @@
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/sweetalert2.min.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.6.0/dist/js/sb-admin-2.min.js"></script>
-
+    {% block extrascripts %}{% endblock %}
+    {% block javascript %}{% endblock %}
     <script>
         // Sidebar toggle for mobile
         document.getElementById('sidebarToggleBtn').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('toggle');
         });
     </script>
-
-    {% block javascript %}{% endblock %}
-
 </body>
 
 </html>

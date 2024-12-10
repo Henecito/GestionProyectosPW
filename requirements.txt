@@ -1,2 +1,6 @@
+# Para instalar todo lo necesario de una
+# pip install -r requirements.txt
 django
 mysql-connector-python
+django-crispy-forms
+crispy-bootstrap5

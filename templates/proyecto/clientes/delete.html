@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <p>¿Estás seguro de que deseas eliminar a {{ cliente.nombre }}?</p>
                     <div class="alert alert-warning">
-                        {{ object }}
+                        <p>Esto eliminará todos los proyectos, documentos y actividades asociadas</p>
                     </div>
                     <form method="post">
                         {% csrf_token %}

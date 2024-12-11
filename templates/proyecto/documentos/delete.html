@@ -9,9 +9,9 @@
                     Confirmar Eliminación
                 </div>
                 <div class="card-body">
-                    <p>¿Estás seguro de que deseas eliminar el siguiente {{ documento_verbose_name }}?</p>
+                    <p>¿Estás seguro de que deseas eliminar el documento {{ object }}?</p>
                     <div class="alert alert-warning">
-                        {{ object }}
+                        <p>Esto eliminará todas las actividades que tenga asociadas</p>
                     </div>
                     <form method="post">
                         {% csrf_token %}

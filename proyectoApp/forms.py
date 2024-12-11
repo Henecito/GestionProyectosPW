@@ -106,7 +106,7 @@ class DocumentoForm(forms.ModelForm):
             "codigo",
             "nombre",
             "proyecto",
-            "revision",
+            # "revision",
             "fecha_inicio",
             "fecha_fin",
             "link_drive",
@@ -116,7 +116,7 @@ class DocumentoForm(forms.ModelForm):
             "codigo": forms.TextInput(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "proyecto": forms.Select(attrs={"class": "form-select"}),
-            "revision": forms.TextInput(attrs={"class": "form-control"}),
+            # "revision": forms.TextInput(attrs={"class": "form-control"}),
             "fecha_inicio": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),
@@ -185,7 +185,7 @@ class ActividadForm(forms.ModelForm):
             "documento",
             "fecha_inicio",
             "fecha_fin",
-            "duracion_estimada",
+            # "duracion_estimada",
             "estado",
         ]
         widgets = {
@@ -198,9 +198,7 @@ class ActividadForm(forms.ModelForm):
             "fecha_fin": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),
-            "duracion_estimada": forms.TextInput(
-                attrs={"class": "form-control"}
-            ),
+            # "duracion_estimada": forms.TextInput(attrs={"class": "form-control"}),
             "estado": forms.Select(attrs={"class": "form-select"}),
         }
 

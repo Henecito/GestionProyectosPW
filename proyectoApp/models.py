@@ -75,7 +75,7 @@ class Documento(models.Model):
     proyecto = models.ForeignKey(
         Proyecto, on_delete=models.CASCADE, related_name="documentos"
     )
-    revision = models.CharField(max_length=100)
+    # revision = models.CharField(max_length=100)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     link_drive = models.URLField(
@@ -121,7 +121,7 @@ class Actividad(models.Model):
     )
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
-    duracion_estimada = models.DurationField(null=True, blank=True)
+    # duracion_estimada = models.DurationField(null=True, blank=True)
     estado = models.ForeignKey(
         Estado,
         on_delete=models.SET_NULL,

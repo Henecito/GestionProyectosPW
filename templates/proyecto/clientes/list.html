@@ -12,31 +12,53 @@
             </a>
         </div>
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>RUT</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for cliente in clientes %}
-            <tr>
-                <td>{{ cliente.rut }}</td>
-                <td>{{ cliente.nombre }}</td>
-                <td>{{ cliente.correo }}</td>
-                <td>{{ cliente.telefono }}</td>
-                <td>
-                    <a href="{% url 'cliente_editar' cliente.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url 'cliente_eliminar' cliente.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+    <div class="card">
+        <div class="card-body">
+
+            {% if object_list %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>RUT</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.rut }}</td>
+                            <td>{{ cliente.nombre }}</td>
+                            <td>{{ cliente.correo }}</td>
+                            <td>{{ cliente.telefono }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'cliente_editar' cliente.pk %}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'cliente_eliminar' cliente.pk %}" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                No hay Clientes registrados.
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
 </div>
 {% endblock %}
 

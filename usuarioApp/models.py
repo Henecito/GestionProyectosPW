@@ -64,7 +64,7 @@ class Empleado(models.Model):
     )
 
     subarea = models.ForeignKey(
-        SubArea, null=True, on_delete=models.CASCADE, related_name="empleados"
+        SubArea, null=True, on_delete=models.SET_NULL, related_name="empleados"
     )
     user = models.OneToOneField(
         Usuario,

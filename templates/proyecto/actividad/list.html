@@ -7,11 +7,13 @@
         <div class="col-md-6">
             <h2>{{ actividad_verbose_name_plural }}</h2>
         </div>
+        {% if perms.proyectoApp.add_actividad %}
         <div class="col-md-6 text-end">
             <a href="{% url 'actividad-create' %}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nuevo {{ actividad_verbose_name }}
             </a>
         </div>
+        {% endif %}
     </div>
 
     <div class="card">
@@ -26,7 +28,11 @@
                                         <th>{{ field.verbose_name }}</th>
                                     {% endif %}
                                 {% endfor %}
-                                <th>Acciones</th>
+                                <th>
+                                {% if perms.proyectoApp.change_actividad or perms.proyectoApp.delete_actividad %}
+                                    Acciones
+                                {% endif %}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,14 +55,18 @@
                                             </td>
                                         {% endif %}
                                     {% endfor %}
-                                    <td>
+                                    <td class="col-1">
                                         <div class="btn-group" role="group">
+                                            {% if perms.proyectoApp.change_actividad %}
                                             <a href="{% url 'actividad-update' object.id %}" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            {% endif %}
+                                            {% if perms.proyectoApp.delete_actividad %}
                                             <a href="{% url 'actividad-delete' object.id %}" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
+                                            {% endif %}
                                         </div>
                                     </td>
                                 </tr>

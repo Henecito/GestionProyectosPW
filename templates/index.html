@@ -89,7 +89,7 @@
                             </a>
                         </li>
                         {% endif %}
-                        {% if perms.usuarioApp.view_usuario %}
+                        {% if perms.auth.view_user %}
                         <li>
                             <a href="{% url 'lista_usuarios' %}" class="dropdown-item">
                                 <i class="fas fa-user"></i> Usuarios
@@ -97,17 +97,21 @@
                         </li>
                         {% endif %}
                         <!-- Aqui no se que if poner -->
+                        {% if user.is_superuser %}
                         <li>
                             <a href="{% url 'asignar_usuarios' %}" class="dropdown-item">
                                 <i class="fas fa-user-cog"></i> Grupos
                             </a>
                         </li>
+                        {% endif %}
+                        <!-- end if -->
+                        {% if perms.baseApp.view_custom_group or perms.baseApp.view_group_permission %}
                         <li>
                             <a href="{% url 'manage_groups' %}" class="dropdown-item">
                                 <i class="fas fa-user-cog"></i> Permisos
                             </a>
                         </li>
-                        <!-- end if -->
+                        {% endif %}
                         {% if perms.proyectoApp.view_cliente %}
                         <li>
                             <a href="{% url 'cliente_list' %}" class="dropdown-item">

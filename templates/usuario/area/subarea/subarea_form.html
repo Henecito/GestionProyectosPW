@@ -1,14 +1,36 @@
 {% extends 'index.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-  <h1>{% if form.instance.pk %}Editar{% else %}Crear{% endif %} SubÁrea</h1>
-  
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </form>
-
-  <br>
-  <a href="{% url 'subarea_list' %}" class="btn btn-secondary">Volver a la lista de SubÁreas</a>
+<div class="container mt-4">
+  <div class="row">
+      <div class="col-md-8 offset-md-2">
+          <div class="card">
+              <div class="card-header bg-primary text-white">
+                  {% if form.instance.pk %}
+                      Editar SubÁrea
+                  {% else %}
+                      Crear SubÁrea
+                  {% endif %}
+              </div>
+              <div class="card-body">
+                  <form method="post">
+                      {% csrf_token %}
+                      {{ form|crispy }}
+                      <div class="d-flex justify-content-between mt-3">
+                          <a href="{% url 'subarea_list' %}" class="btn btn-secondary">Cancelar</a>
+                          <button type="submit" class="btn btn-primary">
+                              {% if form.instance.pk %}
+                                  Actualizar
+                              {% else %}
+                                  Crear
+                              {% endif %}
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 {% endblock %}

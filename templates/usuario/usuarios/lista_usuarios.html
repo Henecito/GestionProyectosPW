@@ -37,59 +37,70 @@
 
 <div class="container-fluid">
     <div class="row mb-3">
-        <div class="col-md-10">
+        <div class="col-md-6">
             <h2>Lista de Usuarios</h2>
         </div>
     </div>
 
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Correo Electrónico</th>
-                <th>Nombre Completo</th>
-                <th>Grupos</th>
-                <th>Último Inicio de Sesión</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in usuarios %}
-            <tr class="usuario-row" data-user-id="{{ usuario.id }}">
-                <td>{{ usuario.id }}</td>
-                <td>
-                    <div class="user-hover-container position-relative">
-                        {{ usuario.username }}
-                        <div class="user-hover-actions">
-                        </div>
-                    </div>
-                </td>
-                <td>{{ usuario.email }}</td>
-                <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
-                <td>
-                    {% for grupo in usuario.groups.all %}
-                    <span class="badge bg-secondary me-1">{{ grupo.name }}</span>
-                    {% empty %}
-                    <span class="badge bg-light text-dark">Sin grupos</span>
-                    {% endfor %}
-                </td>
-                <td>{{ usuario.last_login|default:"Nunca" }}</td>
-                <td>
-                    {% if usuario.is_active %}
-                    <span class="badge bg-success">Activo</span>
-                    {% else %}
-                    <span class="badge bg-danger">Inactivo</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">No hay usuarios registrados</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Correo Electrónico</th>
+                            <th>Nombre Completo</th>
+                            <th>Grupos</th>
+                            <th>Último Inicio de Sesión</th>
+                            {% if user.is_superuser %}
+                            <th>Estado</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr class="usuario-row" data-user-id="{{ usuario.id }}">
+                            <td>{{ usuario.id }}</td>
+                            <td>
+                                <div class="user-hover-container position-relative">
+                                    {{ usuario.username }}
+                                    <div class="user-hover-actions">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ usuario.email }}</td>
+                            <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
+                            <td>
+                                {% for grupo in usuario.groups.all %}
+                                <span class="badge bg-secondary me-1">{{ grupo.name }}</span>
+                                {% empty %}
+                                <span class="badge bg-light text-dark">Sin grupos</span>
+                                {% endfor %}
+                            </td>
+                            <td>{{ usuario.last_login|default:"Nunca" }}</td>
+                            {% if user.is_superuser %}
+                            <td>
+                                {% if usuario.is_active %}
+                                <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No hay usuarios registrados</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

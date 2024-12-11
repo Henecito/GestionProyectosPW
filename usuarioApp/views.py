@@ -2,7 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import render, redirect
@@ -20,16 +20,18 @@ from usuarioApp.models import Area, SubArea, Empleado, Asignar
 from usuarioApp.forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom, AsignarUsuariosAGrupoForm
 
 # Vista para Área
-class AreaListView(LoginRequiredMixin, ListView):
+class AreaListView(PermissionRequiredMixin, ListView):
     model = Area
     template_name = "usuario/area/area_list.html"
+    permission_required = "usuarioApp.view_area"
     context_object_name = "areas"
 
 
-class AreaCreateView(LoginRequiredMixin, CreateView):
+class AreaCreateView(PermissionRequiredMixin, CreateView):
     model = Area
     form_class = AreaForm
     template_name = "usuario/area/area_form.html"
+    permission_required = "usuarioApp.add_area"
     success_url = reverse_lazy("area_list")
 
     def form_valid(self, form):
@@ -37,10 +39,11 @@ class AreaCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AreaUpdateView(LoginRequiredMixin, UpdateView):
+class AreaUpdateView(PermissionRequiredMixin, UpdateView):
     model = Area
     form_class = AreaForm
     template_name = "usuario/area/area_form.html"
+    permission_required = "usuarioApp.change_area"
     success_url = reverse_lazy("area_list")
 
     def form_valid(self, form):
@@ -48,9 +51,10 @@ class AreaUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class AreaDeleteView(LoginRequiredMixin, DeleteView):
+class AreaDeleteView(PermissionRequiredMixin, DeleteView):
     model = Area
     template_name = "usuario/area/area_confirm_delete.html"
+    permission_required = "usuarioApp.delete_area"
     success_url = reverse_lazy("area_list")
 
     def delete(self, request, *args, **kwargs):
@@ -59,16 +63,18 @@ class AreaDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Vista para SubÁrea
-class SubAreaListView(LoginRequiredMixin, ListView):
+class SubAreaListView(PermissionRequiredMixin, ListView):
     model = SubArea
     template_name = "usuario/area/subarea/subarea_list.html"
+    permission_required = "usuarioApp.view_subarea"
     context_object_name = "subareas"
 
 
-class SubAreaCreateView(LoginRequiredMixin, CreateView):
+class SubAreaCreateView(PermissionRequiredMixin, CreateView):
     model = SubArea
     form_class = SubAreaForm
     template_name = "usuario/area/subarea/subarea_form.html"
+    permission_required = "usuarioApp.add_subarea"
     success_url = reverse_lazy("subarea_list")
 
     def form_valid(self, form):
@@ -76,10 +82,11 @@ class SubAreaCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class SubAreaUpdateView(LoginRequiredMixin, UpdateView):
+class SubAreaUpdateView(PermissionRequiredMixin, UpdateView):
     model = SubArea
     form_class = SubAreaForm
     template_name = "usuario/area/subarea/subarea_form.html"
+    permission_required = "usuarioApp.change_subarea"
     success_url = reverse_lazy("subarea_list")
 
     def form_valid(self, form):
@@ -87,9 +94,10 @@ class SubAreaUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class SubAreaDeleteView(LoginRequiredMixin, DeleteView):
+class SubAreaDeleteView(PermissionRequiredMixin, DeleteView):
     model = SubArea
     template_name = "usuario/area/subarea/subarea_confirm_delete.html"
+    permission_required = "usuarioApp.delete_subarea"
     success_url = reverse_lazy("subarea_list")
 
     def delete(self, request, *args, **kwargs):
@@ -98,16 +106,18 @@ class SubAreaDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Vista para Empleado
-class EmpleadoListView(LoginRequiredMixin, ListView):
+class EmpleadoListView(PermissionRequiredMixin, ListView):
     model = Empleado
     template_name = "usuario/empleados/empleado_list.html"
+    permission_required = "usuarioApp.view_empleado"
     context_object_name = "empleados"
 
 
-class EmpleadoCreateView(LoginRequiredMixin, CreateView):
+class EmpleadoCreateView(PermissionRequiredMixin, CreateView):
     model = Empleado
     form_class = EmpleadoForm
     template_name = "usuario/empleados/empleado_form.html"
+    permission_required = "usuarioApp.add_empleado"
     success_url = reverse_lazy("empleado_list")
 
     def form_valid(self, form):
@@ -115,10 +125,11 @@ class EmpleadoCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EmpleadoUpdateView(LoginRequiredMixin, UpdateView):
+class EmpleadoUpdateView(PermissionRequiredMixin, UpdateView):
     model = Empleado
     form_class = EmpleadoForm
     template_name = "usuario/empleados/empleado_form.html"
+    permission_required = "usuarioApp.change_empleado"
     success_url = reverse_lazy("empleado_list")
 
     def form_valid(self, form):
@@ -126,9 +137,10 @@ class EmpleadoUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class EmpleadoDeleteView(LoginRequiredMixin, DeleteView):
+class EmpleadoDeleteView(PermissionRequiredMixin, DeleteView):
     model = Empleado
     template_name = "usuario/empleados/empleado_confirm_delete.html"
+    permission_required = "usuarioApp.delete_empleado"
     success_url = reverse_lazy("empleado_list")
 
     def delete(self, request, *args, **kwargs):
@@ -137,16 +149,18 @@ class EmpleadoDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Vista para Asignar
-class AsignarListView(LoginRequiredMixin, ListView):
+class AsignarListView(PermissionRequiredMixin, ListView):
     model = Asignar
     template_name = "asignar_list.html"
+    permission_required = "usuarioApp.view_asignar"
     context_object_name = "asignaciones"
 
 
-class AsignarCreateView(LoginRequiredMixin, CreateView):
+class AsignarCreateView(PermissionRequiredMixin, CreateView):
     model = Asignar
     form_class = AsignarForm
     template_name = "asignar_form.html"
+    permission_required = "usuarioApp.add_asignar"
     success_url = reverse_lazy("asignar_list")
 
     def form_valid(self, form):
@@ -154,10 +168,11 @@ class AsignarCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AsignarUpdateView(LoginRequiredMixin, UpdateView):
+class AsignarUpdateView(PermissionRequiredMixin, UpdateView):
     model = Asignar
     form_class = AsignarForm
     template_name = "asignar_form.html"
+    permission_required = "usuarioApp.change_asignar"
     success_url = reverse_lazy("asignar_list")
 
     def form_valid(self, form):
@@ -165,18 +180,20 @@ class AsignarUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class AsignarDeleteView(LoginRequiredMixin, DeleteView):
+class AsignarDeleteView(PermissionRequiredMixin, DeleteView):
     model = Asignar
     template_name = "asignar_confirm_delete.html"
+    permission_required = "usuarioApp.delete_asignar"
     success_url = reverse_lazy("asignar_list")
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Asignación eliminada exitosamente.")
         return super().delete(request, *args, **kwargs)
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(PermissionRequiredMixin, ListView):
     model = User
-    template_name = "usuario/usuarios/lista_usuarios.html" 
+    template_name = "usuario/usuarios/lista_usuarios.html"
+    permission_required = "auth.view_user"
     context_object_name = "usuarios"
 
 class PasswordChangeView(PasswordChangeView):

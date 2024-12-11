@@ -94,7 +94,7 @@ def manage_groups(request):
     
     # Obtener permisos de aplicaciones específicas
     content_types = ContentType.objects.filter(
-        app_label__in=['proyectoApp', 'usuarioApp']
+        app_label__in=['proyectoApp', 'usuarioApp', 'baseApp']
     )
     permissions = Permission.objects.filter(content_type__in=content_types)
 

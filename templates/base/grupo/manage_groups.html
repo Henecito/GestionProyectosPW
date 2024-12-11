@@ -5,112 +5,89 @@
 <div class="container my-4">
     <h2>Administrar Grupos y Permisos</h2>
 
-    <form method="post" class="mb-4">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="new_group_name">Crear Nuevo Grupo:</label>
-                    <input type="text" class="form-control" id="new_group_name" name="new_group_name" required>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Crear Nuevo Grupo</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="create_group" value="1">
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Crear Grupo</button>
+                    </form>
+                </div>
+
+                <div class="col-md-6">
+                    <h3>Grupos Existentes</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Grupo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                            <tr>
+                                <td>{{ group.name }}</td>
+                                <td>
+                                    <a href="{% url 'delete_group' group.id %}" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Estás seguro de eliminar este grupo?');">Eliminar</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary">Crear Grupo</button>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3>Gestionar Permisos de Grupos</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="update_permissions" value="1">
+                        <div class="form-group">
+                            <label for="group">Seleccionar Grupo:</label>
+                            <select name="group" id="group" class="form-control" required>
+                                <option value="">-- Seleccione un Grupo --</option>
+                                {% for group in groups %}
+                                <option value="{{ group.id }}">{{ group.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Permisos:</label>
+                            <div class="row">
+                                {% for permission in permissions %}
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="permissions"
+                                            value="{{ permission.id }}" id="perm_{{ permission.id }}">
+                                        <label class="form-check-label" for="perm_{{ permission.id }}">
+                                            {{ permission.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-3">Guardar Permisos</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </form>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Grupo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for group in user_groups %}
-                <tr>
-                    <td>{{ group.name }}</td>
-                    <td>
-                        <a href="{% url 'delete_group' group.id %}" class="btn btn-danger btn-sm">Eliminar</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Permiso</th>
-                {% for group in user_groups %}
-                    <th>{{ group.name }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for permission in permissions %}
-                <tr>
-                    <td>{{ permission.name }}</td>
-                    {% for group in user_groups %}
-                        <td>
-                            <div class="form-check">
-                                <input 
-                                    class="form-check-input" 
-                                    type="checkbox" 
-                                    name="permission_{{ permission.id }}_group_{{ group.id }}"
-                                    {% if permission in group.permissions.all %}
-                                        checked
-                                    {% endif %}
-                                >
-                            </div>
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </div>
 </div>
-{% endblock %}
-
-
-{% block javascript %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        const saveButton = document.querySelector('button[type="submit"]');
-
-        checkboxes.forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                saveButton.disabled = false;
-            });
-        });
-
-        saveButton.addEventListener('click', function (event) {
-            event.preventDefault();
-
-            const formData = new FormData(event.target.closest('form'));
-
-            fetch('/manage-groups/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
-                }
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        alert('Permisos guardados correctamente.');
-                        saveButton.disabled = true;
-                    } else {
-                        alert('Error al guardar los permisos. Por favor, inténtalo de nuevo.');
-                    }
-                })
-                .catch(function (error) {
-                    alert('Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.');
-                });
-        });
-    });
-</script>
 {% endblock %}

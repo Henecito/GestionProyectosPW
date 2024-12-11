@@ -53,7 +53,7 @@ class Empleado(models.Model):
     nacionalidad = models.CharField(max_length=50)
     direccion = models.CharField(
         max_length=200
-    )  # Aumenté el límite para direcciones más largas
+    )
     afp = models.CharField(max_length=50)
     plan_salud = models.CharField(max_length=50)
     carrera = models.CharField(max_length=100)
@@ -63,9 +63,6 @@ class Empleado(models.Model):
         max_length=12, validators=[telefono_validator]
     )
 
-    # fk_id_estado = models.ForeignKey(
-    #     Estado, on_delete=models.CASCADE, related_name="empleados"
-    # )
     subarea = models.ForeignKey(
         SubArea, null=True, on_delete=models.CASCADE, related_name="empleados"
     )

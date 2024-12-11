@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import Group
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit
 from baseApp.models import Estado
@@ -15,4 +16,12 @@ class EstadoForm(forms.ModelForm):
             "color": forms.TextInput(
                 attrs={"type": "color", "class": "form-control form-control-color"}
             ),
+        }
+
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del grupo'}),
         }

@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import ContentType, Group, Permission
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 
-from baseApp.forms import EstadoForm
+from baseApp.forms import EstadoForm, GroupForm
 from baseApp.models import Estado, CustomGroup, Permission
-
 
 # Vista principal
 @login_required
@@ -77,59 +77,55 @@ def eliminar_estado(request, estado_id):
 
 # Grupos y permisos
 @login_required
+@permission_required('auth.view_group', raise_exception=True)
 def manage_groups(request):
-    if request.method == "POST":
-        # Crear nuevo grupo
-        group_name = request.POST.get("new_group_name")
-        if group_name:
-            custom_group = CustomGroup.objects.create(
-                name=group_name,
-                base_group=Group.objects.create(name=group_name),
-                owner=request.user,
-            )
-            return redirect("manage_groups")
+    # Formulario para crear un nuevo grupo
+    if request.method == 'POST' and 'create_group' in request.POST:
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+            messages.success(request, f'Grupo {group.name} creado exitosamente')
+            return redirect('manage_groups')
+    else:
+        form = GroupForm()
 
-        # Actualizar permisos de grupos existentes
-        for param, value in request.POST.items():
-            if param.startswith("permission_"):
-                permission_id = int(param.split("_")[1])
-                group_id = int(param.split("_")[3])
-                custom_group = get_object_or_404(CustomGroup, id=group_id)
-                permission = Permission.objects.get(id=permission_id)
-
-                if value == "on":
-                    custom_group.permissions.add(permission)
-                    custom_group.base_group.permissions.add(permission)
-                else:
-                    custom_group.permissions.remove(permission)
-                    custom_group.base_group.permissions.remove(permission)
-
-    # Obtener los permisos requeridos
-    permissions = Permission.objects.filter(
-        content_type__in=ContentType.objects.filter(
-            app_label__in=[
-                "baseApp",
-                'proyectoApp',
-                'usuarioApp',
-            ]
-        )
+    # Obtener grupos y permisos
+    groups = Group.objects.all()
+    
+    # Obtener permisos de aplicaciones específicas
+    content_types = ContentType.objects.filter(
+        app_label__in=['proyectoApp', 'usuarioApp']
     )
+    permissions = Permission.objects.filter(content_type__in=content_types)
 
-    user_groups = CustomGroup.objects.filter(owner=request.user)
+    # Formulario para gestionar permisos de grupos
+    if request.method == 'POST' and 'update_permissions' in request.POST:
+        group_id = request.POST.get('group')
+        group = get_object_or_404(Group, id=group_id)
+        
+        # Limpiar permisos actuales
+        group.permissions.clear()
+        
+        # Añadir permisos seleccionados
+        selected_permissions = request.POST.getlist('permissions')
+        for perm_id in selected_permissions:
+            permission = Permission.objects.get(id=perm_id)
+            group.permissions.add(permission)
+        
+        messages.success(request, f'Permisos del grupo {group.name} actualizados')
+        return redirect('manage_groups')
 
-    context = {"permissions": permissions, "user_groups": user_groups}
-    return render(request, "base/grupo/manage_groups.html", context)
-
-
-# @login_required
-# def view_groups(request):
-#     user_groups = CustomGroup.objects.filter(owner=request.user)
-#     return render(request, 'base/grupo/view_groups.html', {'user_groups': user_groups})
-
+    context = {
+        'form': form,
+        'groups': groups,
+        'permissions': permissions,
+    }
+    return render(request, 'base/grupo/manage_groups.html', context)
 
 @login_required
+@permission_required('auth.delete_group', raise_exception=True)
 def delete_group(request, group_id):
-    custom_group = get_object_or_404(CustomGroup, id=group_id, owner=request.user)
-    custom_group.base_group.delete()
-    custom_group.delete()
-    return redirect("manage_groups")
+    group = get_object_or_404(Group, id=group_id)
+    group.delete()
+    messages.success(request, f'Grupo {group.name} eliminado exitosamente')
+    return redirect('manage_groups')

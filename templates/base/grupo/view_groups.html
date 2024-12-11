@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Mis Grupos</h2>
+
+    {% if user_groups %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Creado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in user_groups %}
+            <tr>
+                <td>{{ group.name }}</td>
+                <td>{{ group.created_at|date:"Y-m-d" }}</td>
+                <td>
+                    <a href="{% url 'manage_groups' %}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{% url 'delete_group' group.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No tienes grupos creados aún.</p>
+    {% endif %}
+</div>
+{% endblock %}

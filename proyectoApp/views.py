@@ -39,15 +39,27 @@ def resumenDashboard(request):
 # @permission_required("proyectoApp.view_cliente", login_url="/")
 class ClienteListView(PermissionRequiredMixin, ListView):
     model = Cliente
-    template_name = "proyecto/clientes/cliente_list.html"
+    template_name = "proyecto/clientes/list.html"
     permission_required = "proyectoApp.view_cliente"
     context_object_name = "clientes"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Campos a mostrar (excluyendo id y password)
+        visible_fields = [
+            f for f in self.model._meta.fields
+        ]
+        context["cliente_fields"] = visible_fields
+
+        return context
+
 
 # @permission_required("proyectoApp.add_cliente", login_url="/")
 class ClienteCreateView(PermissionRequiredMixin, CreateView):
     model = Cliente
     form_class = ClienteForm
-    template_name = "proyecto/clientes/cliente_form.html"
+    template_name = "proyecto/clientes/form.html"
     permission_required = "proyectoApp.add_cliente"
     success_url = reverse_lazy("cliente_list")
 
@@ -55,11 +67,12 @@ class ClienteCreateView(PermissionRequiredMixin, CreateView):
         messages.success(self.request, "Cliente creado exitosamente.")
         return super().form_valid(form)
 
+
 # @permission_required("proyectoApp.update_cliente", login_url="/")
 class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
     model = Cliente
     form_class = ClienteForm
-    template_name = "proyecto/clientes/cliente_form.html"
+    template_name = "proyecto/clientes/form.html"
     permission_required = "proyectoApp.change_cliente"
     success_url = reverse_lazy("cliente_list")
 
@@ -67,10 +80,11 @@ class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
         messages.success(self.request, "Cliente actualizado exitosamente.")
         return super().form_valid(form)
 
+
 # @permission_required("proyectoApp.delete_cliente", login_url="/")
 class ClienteDeleteView(PermissionRequiredMixin, DeleteView):
     model = Cliente
-    template_name = "proyecto/clientes/cliente_confirm_delete.html"
+    template_name = "proyecto/clientes/delete.html"
     permission_required = "proyectoApp.delete_cliente"
     success_url = reverse_lazy("cliente_list")
 

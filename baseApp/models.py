@@ -34,6 +34,7 @@ class Estado(models.Model):
         return cls.objects.filter(modelo=modelo)
 
 # Grupos
+# Modelo de grupo personalizado
 class CustomGroup(models.Model):
     name = models.CharField(max_length=100, unique=True)
     base_group = models.OneToOneField(

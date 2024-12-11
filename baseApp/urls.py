@@ -18,5 +18,7 @@ urlpatterns = [
         name="eliminar_estado",
     ),
     # Grupos y permisos
-    path("permisos/", views.manage_groups, name="manage_groups"),
+    path("grupos/", views.manage_groups, name="manage_groups"),
+    # path('grupos/lista/', views.view_groups, name='view_groups'),
+    path('grupos/<int:group_id>/delete/', views.delete_group, name='delete_group'),
 ]

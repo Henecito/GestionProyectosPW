@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import ContentType, Group, Permission
 
 from baseApp.forms import EstadoForm
-from baseApp.models import Estado, CustomGroup, GroupPermission
+from baseApp.models import Estado, CustomGroup, Permission
 
 
 # Vista principal
 @login_required
 def inicio(request):
     return render(request, "index.html")
+
 
 # Estado
 def gestionar_estados(request, estado_id=None):
@@ -74,41 +75,61 @@ def eliminar_estado(request, estado_id):
     return redirect("gestionar_estados")
 
 
-# Grupo
+# Grupos y permisos
 @login_required
 def manage_groups(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         # Crear nuevo grupo
-        group_name = request.POST.get('new_group_name')
+        group_name = request.POST.get("new_group_name")
         if group_name:
             custom_group = CustomGroup.objects.create(
                 name=group_name,
                 base_group=Group.objects.create(name=group_name),
-                owner=request.user
+                owner=request.user,
             )
-            return redirect('manage_groups')
-        
+            return redirect("manage_groups")
+
         # Actualizar permisos de grupos existentes
         for param, value in request.POST.items():
-            if param.startswith('permission_'):
-                permission_id = int(param.split('_')[1])
-                group_id = int(param.split('_')[3])
+            if param.startswith("permission_"):
+                permission_id = int(param.split("_")[1])
+                group_id = int(param.split("_")[3])
                 custom_group = get_object_or_404(CustomGroup, id=group_id)
                 permission = Permission.objects.get(id=permission_id)
-                
-                if value == 'on':
+
+                if value == "on":
                     custom_group.permissions.add(permission)
                     custom_group.base_group.permissions.add(permission)
                 else:
                     custom_group.permissions.remove(permission)
                     custom_group.base_group.permissions.remove(permission)
-        
-    # Obtener todos los permisos y grupos del usuario
-    permissions = Permission.objects.all()
+
+    # Obtener los permisos requeridos
+    permissions = Permission.objects.filter(
+        content_type__in=ContentType.objects.filter(
+            app_label__in=[
+                "baseApp",
+                'proyectoApp',
+                'usuarioApp',
+            ]
+        )
+    )
+
     user_groups = CustomGroup.objects.filter(owner=request.user)
-    
-    context = {
-        'permissions': permissions,
-        'user_groups': user_groups
-    }
-    return render(request, 'base/grupo/manage_groups.html', context)
+
+    context = {"permissions": permissions, "user_groups": user_groups}
+    return render(request, "base/grupo/manage_groups.html", context)
+
+
+# @login_required
+# def view_groups(request):
+#     user_groups = CustomGroup.objects.filter(owner=request.user)
+#     return render(request, 'base/grupo/view_groups.html', {'user_groups': user_groups})
+
+
+@login_required
+def delete_group(request, group_id):
+    custom_group = get_object_or_404(CustomGroup, id=group_id, owner=request.user)
+    custom_group.base_group.delete()
+    custom_group.delete()
+    return redirect("manage_groups")

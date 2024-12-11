@@ -50,8 +50,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     # Nuestras apps aqui
     "baseApp",
-    'proyectoApp',
-    'usuarioApp',
+    "proyectoApp",
+    "usuarioApp",
 ]
 
 # Configuración de crispy forms
@@ -98,7 +98,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         # "NAME": BASE_DIR / "db.sqlite3",
-        'NAME': "pwing3.db.sqlite3",
+        "NAME": "pwing3.db.sqlite3",
     }
 }
 

@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Lista de Clientes</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'cliente_crear' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nuevo Cliente
+            </a>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>RUT</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.rut }}</td>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.correo }}</td>
+                <td>{{ cliente.telefono }}</td>
+                <td>
+                    <a href="{% url 'cliente_editar' cliente.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'cliente_eliminar' cliente.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+<style>
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+</style>
+{% endblock %}

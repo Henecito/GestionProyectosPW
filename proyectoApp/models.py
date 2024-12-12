@@ -7,15 +7,15 @@ from usuarioApp.models import Cliente, Empleado
 
 class Proyecto(models.Model):
     nombre = models.CharField(max_length=50)
+    cliente = models.ForeignKey(
+        Cliente, null=True, on_delete=models.SET_NULL, related_name="proyectos"
+    )
     encargado = models.ForeignKey(
         Empleado, null=True, on_delete=models.SET_NULL, related_name="proyectos"
     )
     # encargado_proyecto_cl = models.CharField(max_length=50)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
-    cliente = models.ForeignKey(
-        Cliente, null=True, on_delete=models.SET_NULL, related_name="proyectos"
-    )
     estado = models.ForeignKey(
         Estado,
         on_delete=models.SET_NULL,
@@ -94,10 +94,10 @@ class Documento(models.Model):
 
 class Actividad(models.Model):
     # nombre = models.CharField(max_length=50)
-    descripcion = models.TextField(max_length=200)
     documento = models.ForeignKey(
         Documento, on_delete=models.CASCADE, related_name="actividades"
     )
+    descripcion = models.TextField(max_length=200)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     # duracion_estimada = models.DurationField(null=True, blank=True)

@@ -48,4 +48,7 @@ urlpatterns = [
         views.ActividadDeleteView.as_view(),
         name="actividad-delete",
     ),
+    path('actividad/<int:pk>/update-encargado/', 
+         views.ActividadUpdateViewEncargado.as_view(), 
+         name='actividad-update-encargado'),
 ]

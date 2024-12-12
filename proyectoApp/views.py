@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -11,7 +12,7 @@ from django.views.generic import (
     DetailView,
 )
 from proyectoApp.models import Asignar, Proyecto, Documento, Actividad
-from proyectoApp.forms import AsignarForm, ProyectoForm, DocumentoForm, ActividadForm
+from proyectoApp.forms import ActividadEncargadoForm, AsignarForm, ProyectoForm, DocumentoForm, ActividadForm
 from usuarioApp.models import Cliente, Empleado
 
 
@@ -154,6 +155,8 @@ class ActividadListView(PermissionRequiredMixin, ListView):
         ]
         context["actividad_fields"] = visible_fields
 
+        context['current_user'] = self.request.user
+
         return context
 
 
@@ -181,6 +184,27 @@ class ActividadDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = "proyecto/actividad/delete.html"
     permission_required = "proyectoApp.delete_actividad"
     success_url = reverse_lazy("actividad-list")
+
+# Para que los que tengan asignada una tarea puedan editarla
+class ActividadUpdateViewEncargado(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = Actividad
+    form_class = ActividadEncargadoForm
+    template_name = "proyecto/actividad/update.html"
+    success_url = reverse_lazy('actividad-list')
+    success_message = "Estado de actividad actualizado correctamente."
+
+    def test_func(self):
+        actividad = self.get_object()
+        return (
+            actividad.encargado and 
+            actividad.encargado.user == self.request.user
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['actividad_verbose_name'] = "Actualización de Estado"
+        return context
+
 
 # Vista para Asignar
 class AsignarListView(PermissionRequiredMixin, ListView):

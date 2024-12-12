@@ -6,16 +6,18 @@ from usuarioApp.models import Cliente, Empleado
 
 
 class Proyecto(models.Model):
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50, verbose_name="Nombre")
     cliente = models.ForeignKey(
-        Cliente, null=True, on_delete=models.SET_NULL, related_name="proyectos"
+        Cliente, null=True, on_delete=models.SET_NULL, related_name="proyectos",
+        verbose_name="Cliente"
     )
     encargado = models.ForeignKey(
-        Empleado, null=True, on_delete=models.SET_NULL, related_name="proyectos"
+        Empleado, null=True, on_delete=models.SET_NULL, related_name="proyectos",
+        verbose_name="Encargado"
     )
     # encargado_proyecto_cl = models.CharField(max_length=50)
-    fecha_inicio = models.DateField(null=True, blank=True)
-    fecha_fin = models.DateField(null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha Inicio")
+    fecha_fin = models.DateField(null=True, blank=True, verbose_name="Fecha Fin")
     estado = models.ForeignKey(
         Estado,
         on_delete=models.SET_NULL,
@@ -23,6 +25,7 @@ class Proyecto(models.Model):
         blank=True,
         limit_choices_to={"modelo": "Proyecto"},
         related_name="proyectos",
+        verbose_name="Estado"
     )
 
     def __str__(self):
@@ -49,16 +52,18 @@ class Proyecto(models.Model):
 
 
 class Documento(models.Model):
-    codigo = models.CharField(max_length=50, primary_key=True)
-    nombre = models.CharField(max_length=200)
+    codigo = models.CharField(max_length=50, primary_key=True, verbose_name="Código")
+    nombre = models.CharField(max_length=200, verbose_name="Nombre")
     proyecto = models.ForeignKey(
-        Proyecto, on_delete=models.CASCADE, related_name="documentos"
+        Proyecto, on_delete=models.CASCADE, related_name="documentos",
+        verbose_name="Proyecto"
     )
     # revision = models.CharField(max_length=100)
-    fecha_inicio = models.DateField(null=True, blank=True)
-    fecha_fin = models.DateField(null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha Inicio")
+    fecha_fin = models.DateField(null=True, blank=True, verbose_name="Fecha Fin")
     link_drive = models.URLField(
-        max_length=200, validators=[URLValidator()], null=True, blank=True
+        max_length=200, validators=[URLValidator()], null=True, blank=True,
+        verbose_name="Link Drive"
     )
     estado = models.ForeignKey(
         Estado,
@@ -67,6 +72,7 @@ class Documento(models.Model):
         blank=True,
         limit_choices_to={"modelo": "Documento"},
         related_name="documentos",
+        verbose_name="Estado"
     )
 
     def __str__(self):
@@ -95,14 +101,16 @@ class Documento(models.Model):
 class Actividad(models.Model):
     # nombre = models.CharField(max_length=50)
     documento = models.ForeignKey(
-        Documento, on_delete=models.CASCADE, related_name="actividades"
+        Documento, on_delete=models.CASCADE, related_name="actividades",
+        verbose_name="Documento"
     )
-    descripcion = models.TextField(max_length=200)
+    descripcion = models.TextField(max_length=200, verbose_name="Descripción")
     encargado = models.ForeignKey(
-        Empleado, null=True, on_delete=models.SET_NULL, related_name="actividades"
+        Empleado, null=True, on_delete=models.SET_NULL, related_name="actividades",
+        verbose_name="Encargado"
     )
-    fecha_inicio = models.DateField(null=True, blank=True)
-    fecha_fin = models.DateField(null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha Inicio")
+    fecha_fin = models.DateField(null=True, blank=True, verbose_name="Fecha Fin")
     # duracion_estimada = models.DurationField(null=True, blank=True)
     estado = models.ForeignKey(
         Estado,
@@ -111,6 +119,12 @@ class Actividad(models.Model):
         blank=True,
         limit_choices_to={"modelo": "Actividad"},
         related_name="actividades",
+        verbose_name="Estado"
+    )
+    comentario = models.TextField(
+        blank=True, 
+        null=True, 
+        verbose_name="Comentario"
     )
 
     def __str__(self):

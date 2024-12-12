@@ -53,11 +53,19 @@
                                     {% endfor %}
                                     <td class="col-1">
                                         <div class="btn-group" role="group">
-                                            {% if perms.proyectoApp.change_actividad %}
-                                            <a href="{% url 'actividad-update' object.id %}" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                            {% if object|can_edit_activity:current_user %}
+                                                <!-- Cambiar el URL dependiendo de quién edita -->
+                                                {% if object.encargado.user == current_user %}
+                                                <a href="{% url 'actividad-update-encargado' object.id %}" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% else %}
+                                                <a href="{% url 'actividad-update' object.id %}" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% endif %}
                                             {% endif %}
+                                            
                                             {% if perms.proyectoApp.delete_actividad %}
                                             <a href="{% url 'actividad-delete' object.id %}" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>

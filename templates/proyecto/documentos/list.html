@@ -39,21 +39,17 @@
                             {% for object in object_list %}
                                 <tr>
                                     {% for field in documento_fields %}
-                                        {% if field.name not in 'id,password' %}
                                             <td>
-                                                {% if field.name == 'nombre' %}
-                                                    {{ object.nombre }}
-                                                {% elif field.name == 'descripcion' %}
-                                                    {{ object.descripcion }}
-                                                {% elif field.name == 'fecha_inicio' %}
+                                                {% if field.name == 'fecha_inicio' %}
                                                     {{ object.fecha_inicio|date:"d/m/Y" }}
                                                 {% elif field.name == 'fecha_fin' %}
                                                     {{ object.fecha_fin|date:"d/m/Y" }}
+                                                {% elif field.name == 'estado' %}
+                                                    {{ object.estado|estado_badge }}
                                                 {% else %}
                                                     {{ object|lookup:field.name }}
                                                 {% endif %}
                                             </td>
-                                        {% endif %}
                                     {% endfor %}
                                     <td class="col-1">
                                         <div class="btn-group" role="group">

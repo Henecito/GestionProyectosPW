@@ -1,11 +1,11 @@
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -16,8 +16,8 @@ from django.views.generic import (
     View,
 )
 
-from usuarioApp.models import Area, Cliente, SubArea, Empleado
-from usuarioApp.forms import AreaForm, ClienteForm, SubAreaForm, EmpleadoForm, PasswordChangeFormCustom, AsignarUsuariosAGrupoForm
+from usuarioApp.models import Area, SubArea, Empleado, Asignar
+from usuarioApp.forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom, AsignarGruposForm
 
 # Vista para Área
 class AreaListView(PermissionRequiredMixin, ListView):
@@ -104,62 +104,6 @@ class SubAreaDeleteView(PermissionRequiredMixin, DeleteView):
         messages.success(request, "SubÁrea eliminada exitosamente.")
         return super().delete(request, *args, **kwargs)
 
-# Cliente
-# @permission_required("proyectoApp.view_cliente", login_url="/")
-class ClienteListView(PermissionRequiredMixin, ListView):
-    model = Cliente
-    template_name = "proyecto/clientes/list.html"
-    permission_required = "proyectoApp.view_cliente"
-    context_object_name = "clientes"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Campos a mostrar (excluyendo id y password)
-        visible_fields = [
-            f for f in self.model._meta.fields
-        ]
-        context["cliente_fields"] = visible_fields
-
-        return context
-
-
-# @permission_required("proyectoApp.add_cliente", login_url="/")
-class ClienteCreateView(PermissionRequiredMixin, CreateView):
-    model = Cliente
-    form_class = ClienteForm
-    template_name = "proyecto/clientes/form.html"
-    permission_required = "proyectoApp.add_cliente"
-    success_url = reverse_lazy("cliente_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Cliente creado exitosamente.")
-        return super().form_valid(form)
-
-
-# @permission_required("proyectoApp.update_cliente", login_url="/")
-class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
-    model = Cliente
-    form_class = ClienteForm
-    template_name = "proyecto/clientes/form.html"
-    permission_required = "proyectoApp.change_cliente"
-    success_url = reverse_lazy("cliente_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Cliente actualizado exitosamente.")
-        return super().form_valid(form)
-
-
-# @permission_required("proyectoApp.delete_cliente", login_url="/")
-class ClienteDeleteView(PermissionRequiredMixin, DeleteView):
-    model = Cliente
-    template_name = "proyecto/clientes/delete.html"
-    permission_required = "proyectoApp.delete_cliente"
-    success_url = reverse_lazy("cliente_list")
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Cliente eliminado exitosamente.")
-        return super().delete(request, *args, **kwargs)
 
 # Vista para Empleado
 class EmpleadoListView(PermissionRequiredMixin, ListView):
@@ -204,6 +148,47 @@ class EmpleadoDeleteView(PermissionRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
+# Vista para Asignar
+class AsignarListView(PermissionRequiredMixin, ListView):
+    model = Asignar
+    template_name = "asignar_list.html"
+    permission_required = "usuarioApp.view_asignar"
+    context_object_name = "asignaciones"
+
+
+class AsignarCreateView(PermissionRequiredMixin, CreateView):
+    model = Asignar
+    form_class = AsignarForm
+    template_name = "asignar_form.html"
+    permission_required = "usuarioApp.add_asignar"
+    success_url = reverse_lazy("asignar_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Asignación creada exitosamente.")
+        return super().form_valid(form)
+
+
+class AsignarUpdateView(PermissionRequiredMixin, UpdateView):
+    model = Asignar
+    form_class = AsignarForm
+    template_name = "asignar_form.html"
+    permission_required = "usuarioApp.change_asignar"
+    success_url = reverse_lazy("asignar_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Asignación actualizada exitosamente.")
+        return super().form_valid(form)
+
+
+class AsignarDeleteView(PermissionRequiredMixin, DeleteView):
+    model = Asignar
+    template_name = "asignar_confirm_delete.html"
+    permission_required = "usuarioApp.delete_asignar"
+    success_url = reverse_lazy("asignar_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Asignación eliminada exitosamente.")
+        return super().delete(request, *args, **kwargs)
 
 class UserListView(PermissionRequiredMixin, ListView):
     model = User
@@ -232,23 +217,26 @@ class PasswordChangeView(PasswordChangeView):
         return super().form_invalid(form)
     
 #Grupos
-class AsignarUsuariosAGrupoView(View):
-    def get(self, request):
-        form = AsignarUsuariosAGrupoForm()
-        return render(request, 'usuario/grupos/asignar_grupo.html', {'form': form})
-
-    def post(self, request):
-        form = AsignarUsuariosAGrupoForm(request.POST)
-        if form.is_valid():
-            usuarios = form.cleaned_data['usuarios']
-            grupo = form.cleaned_data['grupo']
-
-            # Asignar los usuarios seleccionados al grupo
-            for usuario in usuarios:
-                usuario.groups.add(grupo)
-                messages.success(request, f"Usuario {usuario.username} asignado a {grupo.name}.")
-
-            return redirect('inicio')  # Redirige a la misma página o a otra
-
-        return render(request, 'usuario/grupos/asignar_grupo.html', {'form': form})
+@login_required
+@permission_required('auth.change_user', raise_exception=True)
+def asignar_grupos(request, user_id):
+    usuario = get_object_or_404(User, pk=user_id)
     
+    if request.method == 'POST':
+        form = AsignarGruposForm(request.POST)
+        if form.is_valid():
+            # Clear existing groups and assign new ones
+            usuario.groups.clear()
+            usuario.groups.add(form.cleaned_data['grupo'])
+            usuario.save()
+            
+            messages.success(request, f'Grupos asignados correctamente para {usuario.username}')
+            return redirect('lista_usuarios')
+    else:
+        # Pre-select the user and initialize the form
+        form = AsignarGruposForm(initial={'usuarios': [usuario]})
+    
+    return render(request, 'usuario/grupos/asignar_grupos.html', {
+        'form': form,
+        'usuario': usuario
+    })

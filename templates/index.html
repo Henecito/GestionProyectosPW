@@ -96,15 +96,6 @@
                             </a>
                         </li>
                         {% endif %}
-                        <!-- Aqui no se que if poner -->
-                        {% if user.is_superuser %}
-                        <li>
-                            <a href="{% url 'asignar_usuarios' %}" class="dropdown-item">
-                                <i class="fas fa-user-cog"></i> Grupos
-                            </a>
-                        </li>
-                        {% endif %}
-                        <!-- end if -->
                         {% if perms.baseApp.view_custom_group or perms.baseApp.view_group_permission %}
                         <li>
                             <a href="{% url 'manage_groups' %}" class="dropdown-item">

@@ -22,19 +22,7 @@ urlpatterns = [
         views.SubAreaDeleteView.as_view(),
         name="subarea_eliminar",
     ),
-    # Cliente
-    path("clientes/", views.ClienteListView.as_view(), name="cliente_list"),
-    path("clientes/crear/", views.ClienteCreateView.as_view(), name="cliente_crear"),
-    path(
-        "clientes/editar/<str:pk>/",
-        views.ClienteUpdateView.as_view(),
-        name="cliente_editar",
-    ),
-    path(
-        "clientes/eliminar/<str:pk>/",
-        views.ClienteDeleteView.as_view(),
-        name="cliente_eliminar",
-    ),
+    
     # Urls para Empleado
     path("empleados/", views.EmpleadoListView.as_view(), name="empleado_list"),
     path("empleados/crear/", views.EmpleadoCreateView.as_view(), name="empleado_crear"),
@@ -50,5 +38,5 @@ urlpatterns = [
     ),
     path('usuarios/', views.UserListView.as_view(), name='lista_usuarios'),
     path('usuarios/perfil/cambiar-contrasena/', views.PasswordChangeView.as_view(), name='password_change'),
-    path('usuarios/grupos/asignar_usuarios/', views.AsignarUsuariosAGrupoView.as_view(), name='asignar_usuarios'),
+    path('asignar-grupos/<int:user_id>/', views.asignar_grupos, name='asignar_grupos')
 ]

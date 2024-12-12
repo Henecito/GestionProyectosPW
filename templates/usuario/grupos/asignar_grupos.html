@@ -1,20 +1,34 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="container">
-    <h2>Asignar Grupos para {{ usuario.username }}</h2>
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group">
-          <label>{{ form.usuarios.label }}</label>
-          {{ form.usuarios }}
-      </div>
-      <div class="form-group">
-          <label>{{ form.grupo.label }}</label>
-          {{ form.grupo }}
-      </div>
-      <button type="submit" class="btn btn-primary mt-3">Asignar Grupo</button>
-  </form>
-</div>  
-{% endblock %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Asignar Grupos para {{ usuario.username }}
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{{ form.usuarios.label }}</label>
+                            {{ form.usuarios }}
+                        </div>
+                        <div class="form-group">
+                            <label>{{ form.grupo.label }}</label>
+                            {{ form.grupo }}
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Asignar Grupo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+
+</div>
+{% endblock %}

@@ -16,8 +16,8 @@ from django.views.generic import (
     View,
 )
 
-from usuarioApp.models import Area, SubArea, Empleado, Asignar
-from usuarioApp.forms import AreaForm, SubAreaForm, EmpleadoForm, AsignarForm, PasswordChangeFormCustom, AsignarGruposForm
+from usuarioApp.models import Area, Cliente, SubArea, Empleado
+from usuarioApp.forms import AreaForm, ClienteForm, SubAreaForm, EmpleadoForm, PasswordChangeFormCustom, AsignarGruposForm
 
 # Vista para Área
 class AreaListView(PermissionRequiredMixin, ListView):
@@ -104,6 +104,50 @@ class SubAreaDeleteView(PermissionRequiredMixin, DeleteView):
         messages.success(request, "SubÁrea eliminada exitosamente.")
         return super().delete(request, *args, **kwargs)
 
+# Cliente
+# @permission_required("proyectoApp.view_cliente", login_url="/")
+class ClienteListView(PermissionRequiredMixin, ListView):
+    model = Cliente
+    template_name = "proyecto/clientes/list.html"
+    permission_required = "proyectoApp.view_cliente"
+    context_object_name = "clientes"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Campos a mostrar (excluyendo id y password)
+        visible_fields = [
+            f for f in self.model._meta.fields
+        ]
+        context["cliente_fields"] = visible_fields
+        return context
+# @permission_required("proyectoApp.add_cliente", login_url="/")
+class ClienteCreateView(PermissionRequiredMixin, CreateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = "proyecto/clientes/form.html"
+    permission_required = "proyectoApp.add_cliente"
+    success_url = reverse_lazy("cliente_list")
+    def form_valid(self, form):
+        messages.success(self.request, "Cliente creado exitosamente.")
+        return super().form_valid(form)
+# @permission_required("proyectoApp.update_cliente", login_url="/")
+class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = "proyecto/clientes/form.html"
+    permission_required = "proyectoApp.change_cliente"
+    success_url = reverse_lazy("cliente_list")
+    def form_valid(self, form):
+        messages.success(self.request, "Cliente actualizado exitosamente.")
+        return super().form_valid(form)
+# @permission_required("proyectoApp.delete_cliente", login_url="/")
+class ClienteDeleteView(PermissionRequiredMixin, DeleteView):
+    model = Cliente
+    template_name = "proyecto/clientes/delete.html"
+    permission_required = "proyectoApp.delete_cliente"
+    success_url = reverse_lazy("cliente_list")
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Cliente eliminado exitosamente.")
+        return super().delete(request, *args, **kwargs)
 
 # Vista para Empleado
 class EmpleadoListView(PermissionRequiredMixin, ListView):
@@ -147,48 +191,6 @@ class EmpleadoDeleteView(PermissionRequiredMixin, DeleteView):
         messages.success(request, "Empleado eliminado exitosamente.")
         return super().delete(request, *args, **kwargs)
 
-
-# Vista para Asignar
-class AsignarListView(PermissionRequiredMixin, ListView):
-    model = Asignar
-    template_name = "asignar_list.html"
-    permission_required = "usuarioApp.view_asignar"
-    context_object_name = "asignaciones"
-
-
-class AsignarCreateView(PermissionRequiredMixin, CreateView):
-    model = Asignar
-    form_class = AsignarForm
-    template_name = "asignar_form.html"
-    permission_required = "usuarioApp.add_asignar"
-    success_url = reverse_lazy("asignar_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Asignación creada exitosamente.")
-        return super().form_valid(form)
-
-
-class AsignarUpdateView(PermissionRequiredMixin, UpdateView):
-    model = Asignar
-    form_class = AsignarForm
-    template_name = "asignar_form.html"
-    permission_required = "usuarioApp.change_asignar"
-    success_url = reverse_lazy("asignar_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Asignación actualizada exitosamente.")
-        return super().form_valid(form)
-
-
-class AsignarDeleteView(PermissionRequiredMixin, DeleteView):
-    model = Asignar
-    template_name = "asignar_confirm_delete.html"
-    permission_required = "usuarioApp.delete_asignar"
-    success_url = reverse_lazy("asignar_list")
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Asignación eliminada exitosamente.")
-        return super().delete(request, *args, **kwargs)
 
 class UserListView(PermissionRequiredMixin, ListView):
     model = User

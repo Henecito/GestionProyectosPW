@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from usuarioApp.models import Area, Cliente, SubArea, Empleado
+from usuarioApp.models import Area, SubArea, Empleado, Asignar
 
 
 class AreaForm(forms.ModelForm):
@@ -21,18 +21,6 @@ class SubAreaForm(forms.ModelForm):
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "area": forms.Select(attrs={"class": "form-select"}),
-        }
-
-# Cliente
-class ClienteForm(forms.ModelForm):
-    class Meta:
-        model = Cliente
-        fields = ["rut", "nombre", "correo", "telefono"]
-        widgets = {
-            "rut": forms.TextInput(attrs={"class": "form-control"}),
-            "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "correo": forms.EmailInput(attrs={"class": "form-control"}),
-            "telefono": forms.TextInput(attrs={"class": "form-control"}),
         }
 
 class EmpleadoForm(forms.ModelForm):
@@ -178,7 +166,14 @@ class EmpleadoForm(forms.ModelForm):
         return email
 
 
-
+class AsignarForm(forms.ModelForm):
+    class Meta:
+        model = Asignar
+        fields = ["empleado", "actividad"]
+        widgets = {
+            "empleado": forms.Select(attrs={"class": "form-select"}),
+            "actividad": forms.Select(attrs={"class": "form-select"}),
+        }
 
 #Password
 class PasswordChangeFormCustom(PasswordChangeForm):
@@ -187,22 +182,28 @@ class PasswordChangeFormCustom(PasswordChangeForm):
         fields = ['password']
     
 #Grupo
-class AsignarUsuariosAGrupoForm(forms.Form):
-    # Usamos ModelMultipleChoiceField para permitir seleccionar varios usuarios
+class AsignarGruposForm(forms.Form):
     usuarios = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple(),  # Usar el widget predeterminado
-        label="Selecciona usuarios",
-        required=True,
+        queryset=User.objects.all(), 
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+        label='Usuarios'
+    )
+    grupo = forms.ModelChoiceField(
+        queryset=Group.objects.all(), 
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Grupo'
     )
 
-    # Usamos ModelChoiceField para permitir seleccionar un único grupo
-    grupo = forms.ModelChoiceField(
-        queryset=Group.objects.all(),
-        widget=forms.Select(),  # Usar el widget predeterminado
-        label="Selecciona grupo",
-        required=True,
-    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make usuarios a single-select if initial data is provided
+        if self.initial.get('usuarios'):
+            self.fields['usuarios'] = forms.ModelChoiceField(
+                queryset=User.objects.all(),
+                widget=forms.Select(attrs={'class': 'form-control'}),
+                label='Usuario'
+            )
+
 
 
 

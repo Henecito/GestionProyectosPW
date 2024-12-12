@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -11,6 +12,7 @@ from django.views.generic import (
     DeleteView,
     DetailView,
 )
+from baseApp.models import Estado
 from proyectoApp.models import Asignar, Proyecto, Documento, Actividad
 from proyectoApp.forms import ActividadEncargadoForm, AsignarForm, ProyectoForm, DocumentoForm, ActividadForm
 from usuarioApp.models import Cliente, Empleado
@@ -45,17 +47,59 @@ class ProyectoListView(PermissionRequiredMixin, ListView):
     permission_required = "proyectoApp.view_proyecto"
     context_object_name = "proyectos"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filtros
+        nombre = self.request.GET.get('nombre', '').strip()
+        cliente_id = self.request.GET.get('cliente', '')
+        estado_id = self.request.GET.get('estado', '')
+        fecha_inicio_desde = self.request.GET.get('fecha_inicio_desde', '')
+        fecha_inicio_hasta = self.request.GET.get('fecha_inicio_hasta', '')
+
+        # Aplicar filtros
+        if nombre:
+            queryset = queryset.filter(nombre__icontains=nombre)
+        
+        if cliente_id:
+            queryset = queryset.filter(cliente_id=cliente_id)
+        
+        if estado_id:
+            queryset = queryset.filter(estado_id=estado_id)
+        
+        if fecha_inicio_desde:
+            queryset = queryset.filter(fecha_inicio__gte=fecha_inicio_desde)
+        
+        if fecha_inicio_hasta:
+            queryset = queryset.filter(fecha_inicio__lte=fecha_inicio_hasta)
+
+        # Sorting
+        sort_by = self.request.GET.get('sort', '')
+        if sort_by:
+            queryset = queryset.order_by(sort_by)
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["proyecto"] = self.model
         context["proyecto_verbose_name"] = self.model._meta.verbose_name
         context["proyecto_verbose_name_plural"] = self.model._meta.verbose_name_plural
 
-        # Campos a mostrar (excluyendo id y password)
+        # Campos a mostrar
         visible_fields = [
             f for f in self.model._meta.fields if f.name not in ["id", "password"]
         ]
         context["proyecto_fields"] = visible_fields
+
+        # Pasar filtro y orden
+        context['current_filters'] = self.request.GET.copy()
+
+        # Estados disponibles
+        context['estados'] = Estado.objects.filter(modelo='Proyecto')
+        
+        # Clientes registrados
+        context['clientes'] = Cliente.objects.all()
 
         return context
 
@@ -94,6 +138,43 @@ class DocumentoListView(PermissionRequiredMixin, ListView):
     permission_required = "proyectoApp.view_documento"
     context_object_name = "documentos"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filtering
+        nombre = self.request.GET.get('nombre', '').strip()
+        codigo = self.request.GET.get('codigo', '').strip()
+        proyecto_id = self.request.GET.get('proyecto', '')
+        estado_id = self.request.GET.get('estado', '')
+        fecha_inicio_desde = self.request.GET.get('fecha_inicio_desde', '')
+        fecha_inicio_hasta = self.request.GET.get('fecha_inicio_hasta', '')
+
+        # Apply filters with exact matching where appropriate
+        if nombre:
+            queryset = queryset.filter(nombre__icontains=nombre)
+
+        if codigo:
+            queryset = queryset.filter(codigo__icontains=codigo)
+        
+        if proyecto_id:
+            queryset = queryset.filter(proyecto_id=proyecto_id)
+        
+        if estado_id:
+            queryset = queryset.filter(estado_id=estado_id)
+        
+        if fecha_inicio_desde:
+            queryset = queryset.filter(fecha_inicio__gte=fecha_inicio_desde)
+        
+        if fecha_inicio_hasta:
+            queryset = queryset.filter(fecha_inicio__lte=fecha_inicio_hasta)
+
+        # Sorting
+        sort_by = self.request.GET.get('sort', '')
+        if sort_by:
+            queryset = queryset.order_by(sort_by)
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["documento"] = self.model
@@ -105,6 +186,16 @@ class DocumentoListView(PermissionRequiredMixin, ListView):
             f for f in self.model._meta.fields if f.name not in ["id", "password"]
         ]
         context["documento_fields"] = visible_fields
+
+        # Pass current filtering and sorting parameters
+        context['current_filters'] = self.request.GET.copy()
+
+        # Get available estados for filtering
+        context['estados'] = Estado.objects.filter(modelo='Documento')
+        
+        # Get all existing document codes for the dropdown
+        context['proyectos'] = Proyecto.objects.all()
+        context['documentos_codigos'] = Documento.objects.values_list('codigo', 'codigo')
 
         return context
 
@@ -143,6 +234,39 @@ class ActividadListView(PermissionRequiredMixin, ListView):
     permission_required = "proyectoApp.view_actividad"
     context_object_name = "actividades"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filtering
+        documento_codigo = self.request.GET.get('documento', '')
+        encargado_id = self.request.GET.get('encargado', '')
+        estado_id = self.request.GET.get('estado', '')
+        fecha_inicio_desde = self.request.GET.get('fecha_inicio_desde', '')
+        fecha_inicio_hasta = self.request.GET.get('fecha_inicio_hasta', '')
+
+        # Apply filters with exact matching where appropriate
+        if documento_codigo:
+            queryset = queryset.filter(documento__codigo=documento_codigo)
+        
+        if encargado_id:
+            queryset = queryset.filter(encargado_id=encargado_id)
+        
+        if estado_id:
+            queryset = queryset.filter(estado_id=estado_id)
+        
+        if fecha_inicio_desde:
+            queryset = queryset.filter(fecha_inicio__gte=fecha_inicio_desde)
+        
+        if fecha_inicio_hasta:
+            queryset = queryset.filter(fecha_inicio__lte=fecha_inicio_hasta)
+
+        # Sorting
+        sort_by = self.request.GET.get('sort', '')
+        if sort_by:
+            queryset = queryset.order_by(sort_by)
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["actividad"] = self.model
@@ -154,6 +278,18 @@ class ActividadListView(PermissionRequiredMixin, ListView):
             f for f in self.model._meta.fields if f.name not in ["id", "password"]
         ]
         context["actividad_fields"] = visible_fields
+
+        # Pass current filtering and sorting parameters
+        context['current_filters'] = self.request.GET.copy()
+
+        # Get available estados for filtering
+        context['estados'] = Estado.objects.filter(modelo='Actividad')
+        
+        # Get all existing document codes for the dropdown
+        context['documentos'] = Documento.objects.all()
+        
+        # Get all encargados for the dropdown
+        context['encargados'] = Empleado.objects.all()
 
         context['current_user'] = self.request.user
 

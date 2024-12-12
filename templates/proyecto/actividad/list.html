@@ -17,6 +17,57 @@
     </div>
 
     <div class="card">
+        <div class="card-header">
+            <form method="get" class="row g-3">
+                <div class="col-md-2">
+                    <select name="documento" class="form-select">
+                        <option value="">Todos los documentos</option>
+                        {% for documento in documentos %}
+                            <option value="{{ documento.codigo }}" 
+                                    {% if request.GET.documento == documento.codigo %}selected{% endif %}>
+                                {{ documento.codigo }} - {{ documento.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="encargado" class="form-select">
+                        <option value="">Todos los encargados</option>
+                        {% for encargado in encargados %}
+                            <option value="{{ encargado.id }}" 
+                                    {% if request.GET.encargado == encargado.id|stringformat:'s' %}selected{% endif %}>
+                                {{ encargado.nombre }} {{ encargado.apellido }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="estado" class="form-select">
+                        <option value="">Todos los estados</option>
+                        {% for estado in estados %}
+                            <option value="{{ estado.id }}" 
+                                    {% if request.GET.estado == estado.id|stringformat:'s' %}selected{% endif %}>
+                                {{ estado.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="fecha_inicio_desde" class="form-control" 
+                           placeholder="Fecha inicio desde" 
+                           value="{{ request.GET.fecha_inicio_desde }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="fecha_inicio_hasta" class="form-control" 
+                           placeholder="Fecha inicio hasta" 
+                           value="{{ request.GET.fecha_inicio_hasta }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a href="{% url 'actividad-list' %}" class="btn btn-secondary">Limpiar</a>
+                </div>
+            </form>
+        </div>
         <div class="card-body">
             {% if object_list %}
                 <div class="table-responsive">
@@ -25,12 +76,19 @@
                             <tr>
                                 {% for field in actividad_fields %}
                                     {% if field.name not in 'id,password' %}
-                                        <th>{{ field.verbose_name }}</th>
+                                        <th>
+                                            <a href="?{% if current_filters %}{{ current_filters.urlencode }}&{% endif %}sort={% if request.GET.sort == field.name %}-{% endif %}{{ field.name }}">
+                                                {{ field.verbose_name }}
+                                                {% if request.GET.sort == field.name %}▲
+                                                {% elif request.GET.sort == '-'|add:field.name %}▼
+                                                {% endif %}
+                                            </a>
+                                        </th>
                                     {% endif %}
                                 {% endfor %}
                                 <th>
                                 {% if perms.proyectoApp.change_actividad or perms.proyectoApp.delete_actividad %}
-                                    Acciones
+                                Acciones
                                 {% endif %}
                                 </th>
                             </tr>

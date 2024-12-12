@@ -17,6 +17,58 @@
     </div>
 
     <div class="card">
+        <div class="card-header">
+            <form method="get" class="row g-3">
+                <div class="col-md-2">
+                    <select name="codigo" class="form-select">
+                        <option value="">Todos los códigos</option>
+                        {% for codigo, display_codigo in documentos_codigos %}
+                            <option value="{{ codigo }}" 
+                                    {% if request.GET.codigo == codigo %}selected{% endif %}>
+                                {{ display_codigo }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="proyecto" class="form-select">
+                        <option value="">Todos los proyectos</option>
+                        {% for proyecto in proyectos %}
+                            <option value="{{ proyecto.id }}" 
+                                    {% if request.GET.proyecto == proyecto.id|stringformat:'s' %}selected{% endif %}>
+                                {{ proyecto.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="estado" class="form-select">
+                        <option value="">Todos los estados</option>
+                        {% for estado in estados %}
+                            <option value="{{ estado.id }}" 
+                                    {% if request.GET.estado == estado.id|stringformat:'s' %}selected{% endif %}>
+                                {{ estado.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="fecha_inicio_desde" class="form-control" 
+                           placeholder="Fecha inicio desde" 
+                           value="{{ request.GET.fecha_inicio_desde }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="fecha_inicio_hasta" class="form-control" 
+                           placeholder="Fecha inicio hasta" 
+                           value="{{ request.GET.fecha_inicio_hasta }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a href="{% url 'documento-list' %}" class="btn btn-secondary">Limpiar</a>
+                </div>
+            </form>
+        </div>
+    
         <div class="card-body">
             {% if object_list %}
                 <div class="table-responsive">
@@ -25,7 +77,14 @@
                             <tr>
                                 {% for field in documento_fields %}
                                     {% if field.name not in 'id,password' %}
-                                        <th>{{ field.verbose_name }}</th>
+                                        <th>
+                                            <a href="?{% if current_filters %}{{ current_filters.urlencode }}&{% endif %}sort={% if request.GET.sort == field.name %}-{% endif %}{{ field.name }}">
+                                                {{ field.verbose_name }}
+                                                {% if request.GET.sort == field.name %}▲
+                                                {% elif request.GET.sort == '-'|add:field.name %}▼
+                                                {% endif %}
+                                            </a>
+                                        </th>
                                     {% endif %}
                                 {% endfor %}
                                 <th>

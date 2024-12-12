@@ -3,19 +3,7 @@ from proyectoApp import views
 
 urlpatterns = [
     path("resumen/", views.resumenDashboard, name="resumen"),
-    # Cliente
-    path("clientes/", views.ClienteListView.as_view(), name="cliente_list"),
-    path("clientes/crear/", views.ClienteCreateView.as_view(), name="cliente_crear"),
-    path(
-        "clientes/editar/<str:pk>/",
-        views.ClienteUpdateView.as_view(),
-        name="cliente_editar",
-    ),
-    path(
-        "clientes/eliminar/<str:pk>/",
-        views.ClienteDeleteView.as_view(),
-        name="cliente_eliminar",
-    ),
+    
     # Crispy forms
     # Proyectos
     path("proyecto/", views.ProyectoListView.as_view(), name="proyecto-list"),

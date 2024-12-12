@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from usuarioApp.models import Area, SubArea, Empleado, Asignar
+from usuarioApp.models import Area, Cliente, SubArea, Empleado
 
 
 class AreaForm(forms.ModelForm):
@@ -21,6 +21,18 @@ class SubAreaForm(forms.ModelForm):
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "area": forms.Select(attrs={"class": "form-select"}),
+        }
+
+# Cliente
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ["rut", "nombre", "correo", "telefono"]
+        widgets = {
+            "rut": forms.TextInput(attrs={"class": "form-control"}),
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "correo": forms.EmailInput(attrs={"class": "form-control"}),
+            "telefono": forms.TextInput(attrs={"class": "form-control"}),
         }
 
 class EmpleadoForm(forms.ModelForm):
@@ -166,14 +178,7 @@ class EmpleadoForm(forms.ModelForm):
         return email
 
 
-class AsignarForm(forms.ModelForm):
-    class Meta:
-        model = Asignar
-        fields = ["empleado", "actividad"]
-        widgets = {
-            "empleado": forms.Select(attrs={"class": "form-select"}),
-            "actividad": forms.Select(attrs={"class": "form-select"}),
-        }
+
 
 #Password
 class PasswordChangeFormCustom(PasswordChangeForm):

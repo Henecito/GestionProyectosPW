@@ -2,20 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from baseApp.models import Estado
-from proyectoApp.models import Cliente, Proyecto, Documento, Actividad
-
-
-# Cliente
-class ClienteForm(forms.ModelForm):
-    class Meta:
-        model = Cliente
-        fields = ["rut", "nombre", "correo", "telefono"]
-        widgets = {
-            "rut": forms.TextInput(attrs={"class": "form-control"}),
-            "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "correo": forms.EmailInput(attrs={"class": "form-control"}),
-            "telefono": forms.TextInput(attrs={"class": "form-control"}),
-        }
+from proyectoApp.models import Asignar, Proyecto, Documento, Actividad
 
 
 # Proyecto
@@ -50,7 +37,7 @@ class ProyectoForm(forms.ModelForm):
         ]
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "encargado": forms.TextInput(attrs={"class": "form-control"}),
+            "encargado": forms.Select(attrs={"class": "form-select"}),
             # "encargado_proyecto_cl": forms.TextInput(attrs={"class": "form-control"}),
             "fecha_inicio": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
@@ -218,3 +205,12 @@ class ActividadForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Limitar estados solo a Actividad
         self.fields["estado"].queryset = Estado.get_estados_por_modelo("Actividad")
+
+class AsignarForm(forms.ModelForm):
+    class Meta:
+        model = Asignar
+        fields = ["empleado", "actividad"]
+        widgets = {
+            "empleado": forms.Select(attrs={"class": "form-select"}),
+            "actividad": forms.Select(attrs={"class": "form-select"}),
+        }

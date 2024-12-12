@@ -15,19 +15,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Cliente',
-            fields=[
-                ('rut', models.CharField(max_length=12, primary_key=True, serialize=False, validators=[django.core.validators.RegexValidator(message='Ingrese un RUT válido (formato: xxxxxxxx-x)', regex='^\\d{7,8}[-][0-9kK]$')])),
-                ('nombre', models.CharField(max_length=100)),
-                ('correo', models.EmailField(max_length=50)),
-                ('telefono', models.CharField(max_length=12, validators=[django.core.validators.RegexValidator(message='Ingrese un número de teléfono válido', regex='^(\\+?56)?(\\s?)(0?9)(\\s?)[9876543]\\d{7}$')])),
-            ],
-            options={
-                'verbose_name_plural': 'Clientes',
-                'db_table': 'cliente',
-            },
-        ),
-        migrations.CreateModel(
             name='Documento',
             fields=[
                 ('codigo', models.CharField(max_length=50, primary_key=True, serialize=False)),
@@ -35,7 +22,7 @@ class Migration(migrations.Migration):
                 ('fecha_inicio', models.DateField(blank=True, null=True)),
                 ('fecha_fin', models.DateField(blank=True, null=True)),
                 ('link_drive', models.URLField(blank=True, null=True, validators=[django.core.validators.URLValidator()])),
-                ('fk_id_estado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='documentos', to='baseApp.estado')),
+                ('estado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='documentos', to='baseApp.estado')),
             ],
             options={
                 'verbose_name_plural': 'Documentos',
@@ -51,8 +38,8 @@ class Migration(migrations.Migration):
                 ('fecha_inicio', models.DateField(blank=True, null=True)),
                 ('fecha_fin', models.DateField(blank=True, null=True)),
                 ('duracion_estimada', models.DurationField(blank=True, null=True)),
-                ('fk_id_estado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='actividades', to='baseApp.estado')),
-                ('fk_id_codigo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='actividades', to='proyectoApp.documento')),
+                ('estado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='actividades', to='baseApp.estado')),
+                ('documento', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='actividades', to='proyectoApp.documento')),
             ],
             options={
                 'verbose_name_plural': 'Actividades',
@@ -65,11 +52,10 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nombre_proyecto', models.CharField(max_length=50)),
                 ('encargado_proyecto_pw', models.CharField(max_length=50)),
-                ('encargado_proyecto_cl', models.CharField(max_length=50)),
                 ('fecha_inicio', models.DateField(blank=True, null=True)),
                 ('fecha_fin', models.DateField(blank=True, null=True)),
-                ('fk_id_cliente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proyectos', to='proyectoApp.cliente')),
-                ('fk_id_estado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proyectos', to='baseApp.estado')),
+                ('cliente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proyectos', to='usuarioApp.cliente')),
+                ('estado', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proyectos', to='baseApp.estado')),
             ],
             options={
                 'verbose_name_plural': 'Proyectos',
@@ -78,7 +64,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='documento',
-            name='fk_id_proyecto',
+            name='proyecto',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='documentos', to='proyectoApp.proyecto'),
         ),
     ]

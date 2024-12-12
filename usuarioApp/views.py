@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required, permission_required
@@ -17,7 +16,15 @@ from django.views.generic import (
 )
 
 from usuarioApp.models import Area, Cliente, SubArea, Empleado
-from usuarioApp.forms import AreaForm, ClienteForm, SubAreaForm, EmpleadoForm, PasswordChangeFormCustom, AsignarGruposForm
+from usuarioApp.forms import (
+    AreaForm,
+    ClienteForm,
+    SubAreaForm,
+    EmpleadoForm,
+    PasswordChangeFormCustom,
+    AsignarGruposForm,
+)
+
 
 # Vista para Área
 class AreaListView(PermissionRequiredMixin, ListView):
@@ -104,6 +111,7 @@ class SubAreaDeleteView(PermissionRequiredMixin, DeleteView):
         messages.success(request, "SubÁrea eliminada exitosamente.")
         return super().delete(request, *args, **kwargs)
 
+
 # Cliente
 # @permission_required("proyectoApp.view_cliente", login_url="/")
 class ClienteListView(PermissionRequiredMixin, ListView):
@@ -111,14 +119,15 @@ class ClienteListView(PermissionRequiredMixin, ListView):
     template_name = "proyecto/clientes/list.html"
     permission_required = "proyectoApp.view_cliente"
     context_object_name = "clientes"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Campos a mostrar (excluyendo id y password)
-        visible_fields = [
-            f for f in self.model._meta.fields
-        ]
+        visible_fields = [f for f in self.model._meta.fields]
         context["cliente_fields"] = visible_fields
         return context
+
+
 # @permission_required("proyectoApp.add_cliente", login_url="/")
 class ClienteCreateView(PermissionRequiredMixin, CreateView):
     model = Cliente
@@ -126,9 +135,12 @@ class ClienteCreateView(PermissionRequiredMixin, CreateView):
     template_name = "proyecto/clientes/form.html"
     permission_required = "proyectoApp.add_cliente"
     success_url = reverse_lazy("cliente_list")
+
     def form_valid(self, form):
         messages.success(self.request, "Cliente creado exitosamente.")
         return super().form_valid(form)
+
+
 # @permission_required("proyectoApp.update_cliente", login_url="/")
 class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
     model = Cliente
@@ -136,18 +148,23 @@ class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = "proyecto/clientes/form.html"
     permission_required = "proyectoApp.change_cliente"
     success_url = reverse_lazy("cliente_list")
+
     def form_valid(self, form):
         messages.success(self.request, "Cliente actualizado exitosamente.")
         return super().form_valid(form)
+
+
 # @permission_required("proyectoApp.delete_cliente", login_url="/")
 class ClienteDeleteView(PermissionRequiredMixin, DeleteView):
     model = Cliente
     template_name = "proyecto/clientes/delete.html"
     permission_required = "proyectoApp.delete_cliente"
     success_url = reverse_lazy("cliente_list")
+
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Cliente eliminado exitosamente.")
         return super().delete(request, *args, **kwargs)
+
 
 # Vista para Empleado
 class EmpleadoListView(PermissionRequiredMixin, ListView):
@@ -198,47 +215,54 @@ class UserListView(PermissionRequiredMixin, ListView):
     permission_required = "auth.view_user"
     context_object_name = "usuarios"
 
+
 class PasswordChangeView(PasswordChangeView):
     form_class = PasswordChangeFormCustom  # Tu formulario personalizado
-    template_name = 'usuario/perfil/password_change_form.html'
-    success_url = reverse_lazy("password_change")  # Redirigir a la página de inicio tras un cambio exitoso
+    template_name = "usuario/perfil/password_change_form.html"
+    success_url = reverse_lazy(
+        "password_change"
+    )  # Redirigir a la página de inicio tras un cambio exitoso
 
     def form_valid(self, form):
         # Guardar la nueva contraseña
         user = form.save()
 
         # Actualizar la sesión para que el usuario no se desloguee tras cambiar la contraseña
-        update_session_auth_hash(self.request, user)  
+        update_session_auth_hash(self.request, user)
 
         # Mostrar mensaje de éxito
         messages.success(self.request, "Contraseña cambiada exitosamente.")
-        
+
         return super().form_valid(form)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
-    
-#Grupos
+
+
+# Grupos
 @login_required
-@permission_required('auth.change_user', raise_exception=True)
+@permission_required("auth.change_user", raise_exception=True)
 def asignar_grupos(request, user_id):
     usuario = get_object_or_404(User, pk=user_id)
-    
-    if request.method == 'POST':
+
+    if request.method == "POST":
         form = AsignarGruposForm(request.POST)
         if form.is_valid():
             # Clear existing groups and assign new ones
             usuario.groups.clear()
-            usuario.groups.add(form.cleaned_data['grupo'])
+            usuario.groups.add(form.cleaned_data["grupo"])
             usuario.save()
-            
-            messages.success(request, f'Grupos asignados correctamente para {usuario.username}')
-            return redirect('lista_usuarios')
+
+            messages.success(
+                request, f"Grupos asignados correctamente para {usuario.username}"
+            )
+            return redirect("lista_usuarios")
     else:
         # Pre-select the user and initialize the form
-        form = AsignarGruposForm(initial={'usuarios': [usuario]})
-    
-    return render(request, 'usuario/grupos/asignar_grupos.html', {
-        'form': form,
-        'usuario': usuario
-    })
+        form = AsignarGruposForm(initial={"usuarios": [usuario]})
+
+    return render(
+        request,
+        "usuario/grupos/asignar_grupos.html",
+        {"form": form, "usuario": usuario},
+    )

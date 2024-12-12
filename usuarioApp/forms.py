@@ -10,8 +10,10 @@ class AreaForm(forms.ModelForm):
     class Meta:
         model = Area
         fields = ["nombre", "descripcion"]
-        widgets = {"nombre": forms.TextInput(attrs={"class": "form-control"}),
-                   "descripcion": forms.Textarea(attrs={"class": "form-control", "rows": 2})}
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.Textarea(attrs={"class": "form-control", "rows": 2}),
+        }
 
 
 class SubAreaForm(forms.ModelForm):
@@ -22,6 +24,7 @@ class SubAreaForm(forms.ModelForm):
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "area": forms.Select(attrs={"class": "form-select"}),
         }
+
 
 # Cliente
 class ClienteForm(forms.ModelForm):
@@ -35,8 +38,9 @@ class ClienteForm(forms.ModelForm):
             "telefono": forms.TextInput(attrs={"class": "form-control"}),
         }
 
+
 class EmpleadoForm(forms.ModelForm):
-    # Validador de RUT chileno
+    # Validador de RUT
     rut_validator = RegexValidator(
         regex=r"^\d{7,8}[-][0-9kK]$",
         message="Ingrese un RUT válido (formato: xxxxxxxx-x)",
@@ -101,7 +105,7 @@ class EmpleadoForm(forms.ModelForm):
             "afp": forms.TextInput(attrs={"class": "form-control"}),
             "plan_salud": forms.TextInput(attrs={"class": "form-control"}),
             "carrera": forms.TextInput(attrs={"class": "form-control"}),
-            "subarea": forms.Select(attrs={"class": "form-selectl"})
+            "subarea": forms.Select(attrs={"class": "form-selectl"}),
         }
 
     # Sobrescribir el método save para crear el Usuario
@@ -116,7 +120,7 @@ class EmpleadoForm(forms.ModelForm):
                 email=empleado.email,
                 password="defaultpassword",  # Cambiar esta contraseña o hacerla dinámica
                 first_name=empleado.nombre,
-                last_name=empleado.apellidos
+                last_name=empleado.apellidos,
             )
             # Asignamos el Usuario al Empleado
             empleado.user = usuario
@@ -127,7 +131,6 @@ class EmpleadoForm(forms.ModelForm):
         if commit:
             empleado.save()
         return empleado
-
 
     def clean_rut(self):
         # Método de validación y formateo de RUT
@@ -178,36 +181,31 @@ class EmpleadoForm(forms.ModelForm):
         return email
 
 
-#Password
+# Password
 class PasswordChangeFormCustom(PasswordChangeForm):
     class Meta:
         model = User
-        fields = ['password']
-    
-#Grupo
+        fields = ["password"]
+
+
+# Grupo
 class AsignarGruposForm(forms.Form):
     usuarios = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(), 
-        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
-        label='Usuarios'
+        queryset=User.objects.all(),
+        widget=forms.SelectMultiple(attrs={"class": "form-control"}),
+        label="Usuarios",
     )
     grupo = forms.ModelChoiceField(
-        queryset=Group.objects.all(), 
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label='Grupo'
+        queryset=Group.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        label="Grupo",
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make usuarios a single-select if initial data is provided
-        if self.initial.get('usuarios'):
-            self.fields['usuarios'] = forms.ModelChoiceField(
+        if self.initial.get("usuarios"):
+            self.fields["usuarios"] = forms.ModelChoiceField(
                 queryset=User.objects.all(),
-                widget=forms.Select(attrs={'class': 'form-control'}),
-                label='Usuario'
+                widget=forms.Select(attrs={"class": "form-control"}),
+                label="Usuario",
             )
-
-
-
-
-

@@ -10,21 +10,19 @@ from proyectoApp.models import Asignar, Proyecto, Documento, Actividad
 
 class ProyectoForm(forms.ModelForm):
     fecha_inicio = forms.DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],  # Formatos aceptados
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],  # Formatos aceptados
         widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control'},
-            format='%Y-%m-%d'
-        )
+            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
+        ),
     )
     fecha_fin = forms.DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],
         widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control'},
-            format='%Y-%m-%d'
+            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
         ),
-        required=False  # Si el campo puede estar vacío
+        required=False,  # Si el campo puede estar vacío
     )
-    
+
     class Meta:
         model = Proyecto
         fields = [
@@ -72,19 +70,17 @@ class ProyectoForm(forms.ModelForm):
 
 class DocumentoForm(forms.ModelForm):
     fecha_inicio = forms.DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],  # Formatos aceptados
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],  # Formatos aceptados
         widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control'},
-            format='%Y-%m-%d'
-        )
+            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
+        ),
     )
     fecha_fin = forms.DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],
         widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control'},
-            format='%Y-%m-%d'
+            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
         ),
-        required=False  # Si el campo puede estar vacío
+        required=False,  # Si el campo puede estar vacío
     )
 
     class Meta:
@@ -149,19 +145,17 @@ class DocumentoForm(forms.ModelForm):
 
 class ActividadForm(forms.ModelForm):
     fecha_inicio = forms.DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],  # Formatos aceptados
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],  # Formatos aceptados
         widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control'},
-            format='%Y-%m-%d'
-        )
+            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
+        ),
     )
     fecha_fin = forms.DateField(
-        input_formats=['%d/%m/%Y', '%Y-%m-%d'],
+        input_formats=["%d/%m/%Y", "%Y-%m-%d"],
         widget=forms.DateInput(
-            attrs={'type': 'date', 'class': 'form-control'},
-            format='%Y-%m-%d'
+            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
         ),
-        required=False  # Si el campo puede estar vacío
+        required=False,  # Si el campo puede estar vacío
     )
 
     class Meta:
@@ -208,31 +202,34 @@ class ActividadForm(forms.ModelForm):
         # Limitar estados solo a Actividad
         self.fields["estado"].queryset = Estado.get_estados_por_modelo("Actividad")
 
+
 class ActividadEncargadoForm(forms.ModelForm):
     class Meta:
         model = Actividad
-        fields = ['estado', 'comentario']
-        
+        fields = ["estado", "comentario"]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         # Configurar los campos para que sean requeridos o no
-        self.fields['estado'].required = False
-        self.fields['comentario'].required = False
-        
-        # Personalizar widgets si es necesario
-        self.fields['estado'].widget.attrs.update({
-            'class': 'form-select',
-            'placeholder': 'Seleccionar Estado'
-        })
-        self.fields['comentario'].widget.attrs.update({
-            'class': 'form-control',
-            'rows': 3,
-            'placeholder': 'Agregar comentario (opcional)'
-        })
-        
+        self.fields["estado"].required = False
+        self.fields["comentario"].required = False
+
+        # Personalizar widgets
+        self.fields["estado"].widget.attrs.update(
+            {"class": "form-select", "placeholder": "Seleccionar Estado"}
+        )
+        self.fields["comentario"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "rows": 3,
+                "placeholder": "Agregar comentario (opcional)",
+            }
+        )
+
         # Limitar estados solo a Actividad
-        self.fields['estado'].queryset = Estado.get_estados_por_modelo("Actividad")
+        self.fields["estado"].queryset = Estado.get_estados_por_modelo("Actividad")
+
 
 class AsignarForm(forms.ModelForm):
     class Meta:

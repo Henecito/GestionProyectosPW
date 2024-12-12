@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit
 from baseApp.models import Estado
 
+
 # Estado
 class EstadoForm(forms.ModelForm):
     class Meta:
@@ -18,10 +19,13 @@ class EstadoForm(forms.ModelForm):
             ),
         }
 
+
 class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ['name']
+        fields = ["name"]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del grupo'}),
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Nombre del grupo"}
+            ),
         }

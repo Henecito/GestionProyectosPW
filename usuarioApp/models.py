@@ -19,9 +19,7 @@ class Area(models.Model):
 
 class SubArea(models.Model):
     nombre = models.CharField(max_length=50)
-    area = models.ForeignKey(
-        Area, on_delete=models.CASCADE, related_name="subareas"
-    )
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="subareas")
 
     def __str__(self):
         return self.nombre
@@ -54,6 +52,7 @@ class Cliente(models.Model):
         db_table = "cliente"
         verbose_name_plural = "Clientes"
 
+
 class Empleado(models.Model):
     rut_validator = RegexValidator(
         regex=r"^\d{7,8}[-][0-9kK]$",
@@ -71,9 +70,7 @@ class Empleado(models.Model):
     email = models.EmailField(unique=True)
     fecha_nac = models.DateField()
     nacionalidad = models.CharField(max_length=50)
-    direccion = models.CharField(
-        max_length=200
-    )
+    direccion = models.CharField(max_length=200)
     afp = models.CharField(max_length=50)
     plan_salud = models.CharField(max_length=50)
     carrera = models.CharField(max_length=100)

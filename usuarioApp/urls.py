@@ -48,7 +48,11 @@ urlpatterns = [
         views.EmpleadoDeleteView.as_view(),
         name="empleado_eliminar",
     ),
-    path('usuarios/', views.UserListView.as_view(), name='lista_usuarios'),
-    path('usuarios/perfil/cambiar-contrasena/', views.PasswordChangeView.as_view(), name='password_change'),
-    path('asignar-grupos/<int:user_id>/', views.asignar_grupos, name='asignar_grupos')
+    path("usuarios/", views.UserListView.as_view(), name="lista_usuarios"),
+    path(
+        "usuarios/perfil/cambiar-contrasena/",
+        views.PasswordChangeView.as_view(),
+        name="password_change",
+    ),
+    path("asignar-grupos/<int:user_id>/", views.asignar_grupos, name="asignar_grupos"),
 ]

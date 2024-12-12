@@ -29,14 +29,15 @@ class ProyectoForm(forms.ModelForm):
         model = Proyecto
         fields = [
             "nombre",
+            "cliente",
             "encargado",
             "fecha_inicio",
             "fecha_fin",
-            "cliente",
             "estado",
         ]
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "cliente": forms.Select(attrs={"class": "form-select"}),
             "encargado": forms.Select(attrs={"class": "form-select"}),
             # "encargado_proyecto_cl": forms.TextInput(attrs={"class": "form-control"}),
             "fecha_inicio": forms.DateInput(
@@ -45,7 +46,6 @@ class ProyectoForm(forms.ModelForm):
             "fecha_fin": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),
-            "cliente": forms.Select(attrs={"class": "form-select"}),
             "estado": forms.Select(attrs={"class": "form-select"}),
         }
 
@@ -168,8 +168,9 @@ class ActividadForm(forms.ModelForm):
         model = Actividad
         fields = [
             # "nombre",
-            "descripcion",
             "documento",
+            "descripcion",
+            "encargado",
             "fecha_inicio",
             "fecha_fin",
             # "duracion_estimada",
@@ -177,8 +178,9 @@ class ActividadForm(forms.ModelForm):
         ]
         widgets = {
             # "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
             "documento": forms.Select(attrs={"class": "form-select"}),
+            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
+            "encargado": forms.Select(attrs={"class": "form-select"}),
             "fecha_inicio": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
             ),

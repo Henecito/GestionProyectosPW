@@ -98,6 +98,9 @@ class Actividad(models.Model):
         Documento, on_delete=models.CASCADE, related_name="actividades"
     )
     descripcion = models.TextField(max_length=200)
+    encargado = models.ForeignKey(
+        Empleado, null=True, on_delete=models.SET_NULL, related_name="actividades"
+    )
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     # duracion_estimada = models.DurationField(null=True, blank=True)
